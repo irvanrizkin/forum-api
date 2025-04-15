@@ -1,23 +1,14 @@
-import js from "@eslint/js";
-import globals from "globals";
-import tseslint from "typescript-eslint";
-import { defineConfig } from "eslint/config";
+import eslintPluginUnicorn from 'eslint-plugin-unicorn';
+import globals from 'globals';
 
-export default defineConfig([
+/** @type {import('eslint').Linter.Config[]} */
+export default [
   {
-    files: ["**/*.{js,mjs,cjs,ts}"],
-    plugins: { js },
-    extends: ["js/recommended"],
+    ignores: ['**/dist/**', '**/node_modules/**'],
   },
   {
-    files: ["**/*.{js,mjs,cjs,ts}"],
-    languageOptions: { globals: globals.node },
+    files: ['**/*.{js,mjs,cjs,ts}'],
   },
-  tseslint.configs.recommended,
-  {
-    rules: {
-      "no-floating-promises": "error",
-      "@typescript-eslint/return-await": "error",
-    },
-  },
-]);
+  { languageOptions: { globals: globals.node } },
+  eslintPluginUnicorn.configs.recommended,
+];
