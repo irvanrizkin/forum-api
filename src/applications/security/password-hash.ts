@@ -1,4 +1,8 @@
-/* eslint-disable @typescript-eslint/no-extraneous-class */
-class PasswordHash {}
+class PasswordHash {
+  async hash(password: string): Promise<void> {
+    void password;
+    throw new Error('PASSWORD_HASH.METHOD_NOT_IMPLEMENTED');
+  }
+}
 
 export { PasswordHash };
