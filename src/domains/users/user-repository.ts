@@ -1,4 +1,13 @@
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
-class UserRepository {}
+class UserRepository {
+  async addUser(registerUser: object): Promise<void> {
+    void registerUser;
+    throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED');
+  }
+
+  async verifyAvailableUsername(username: string): Promise<void> {
+    void username;
+    throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED');
+  }
+}
 
 export { UserRepository };
