@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { InvariantError } from '../invariant-error';
+import { InvariantError } from '@/commons/exceptions/invariant-error';
 
 describe('InvariantError', () => {
   it('should create an error correctly', () => {

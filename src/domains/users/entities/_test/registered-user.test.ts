@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { RegisteredUser } from '../registered-user';
+import { RegisteredUser } from '@/domains/users/entities/registered-user';
 
 describe('a RegisteredUser entities', () => {
   it('should throw error when payload did not contain needed property', () => {

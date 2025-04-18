@@ -1,4 +1,4 @@
-import { pool } from '../src/infrastructures/database/postgres/pool';
+import { pool } from '@/infrastructures/database/postgres/pool';
 
 interface AddUserPayload {
   id?: string;

@@ -1,6 +1,6 @@
 import { UserRepository } from '@/domains/users/user-repository';
 
-import { PasswordHash } from '../security/password-hash';
+import { PasswordHash } from '@/applications/security/password-hash';
 
 interface AddUserUseCasePayload {
   username: string;

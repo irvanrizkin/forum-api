@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { PasswordHash } from '../password-hash';
+import { PasswordHash } from '@/applications/security/password-hash';
 
 describe('PasswordHash interface', () => {
   it('should throw error when invoke abstract behavior', async () => {

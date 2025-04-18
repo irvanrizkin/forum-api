@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { AuthenticationError } from '../authentication-error';
+import { AuthenticationError } from '@/commons/exceptions/authentication-error';
 
 describe('AuthenticationError', () => {
   it('should create AuthenticationError correctly', () => {

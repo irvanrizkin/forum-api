@@ -4,8 +4,7 @@ import { RegisteredUser } from '@/domains/users/entities/registered-user';
 import { UserRepository } from '@/domains/users/user-repository';
 
 import { PasswordHash } from '@/applications/security/password-hash';
-
-import { AddUserUseCase } from '../add-user-use-case';
+import { AddUserUseCase } from '@/applications/use_case/add-user-use-case';
 
 describe('AddUserUseCase', () => {
   it('should orchestrating the add user action correctly', async () => {

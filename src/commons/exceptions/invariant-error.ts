@@ -1,4 +1,4 @@
-import { ClientError } from './client-error';
+import { ClientError } from '@/commons/exceptions/client-error';
 
 class InvariantError extends ClientError {
   constructor(message: string) {
