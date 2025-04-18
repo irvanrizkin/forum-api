@@ -44,8 +44,6 @@ class UserRepositoryPostgres extends UserRepository {
 
     const result = await this.pool.query(query);
 
-    console.log(result.rows[0]);
-
     return new RegisteredUser({
       id: result.rows[0].id,
       username: result.rows[0].username,
