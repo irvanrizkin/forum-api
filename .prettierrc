@@ -10,6 +10,7 @@
     "/applications/(.*)$",
     "/interfaces/(.*)$",
     "/infrastructures/(.*)$",
+    "/tests/(.*)$",
     "^[./]"
   ],
   "importOrderSeparation": true,
