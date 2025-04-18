@@ -3,6 +3,7 @@ import { describe, expect, it } from '@jest/globals';
 import { InvariantError } from '@/commons/exceptions/invariant-error';
 
 import { RegisterUser } from '@/domains/users/entities/register-user';
+import { RegisteredUser } from '@/domains/users/entities/registered-user';
 
 import { pool } from '@/infrastructures/database/postgres/pool';
 import { UserRepositoryPostgres } from '@/infrastructures/repository/user-repository-postgres';
@@ -87,11 +88,13 @@ describe('UserRepositoryPostgres', () => {
       const registeredUser = await userRepositoryPostgres.addUser(registerUser);
 
       // Assert
-      expect(registeredUser).toStrictEqual({
-        id: 'id-016',
-        username: 'john',
-        fullname: 'John Doe',
-      });
+      expect(registeredUser).toStrictEqual(
+        new RegisteredUser({
+          id: 'id-016',
+          username: 'john',
+          fullname: 'John Doe',
+        }),
+      );
     });
   });
 });
