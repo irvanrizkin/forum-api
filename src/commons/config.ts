@@ -18,6 +18,11 @@ const config = {
     password: process.env.PGPASSWORD,
     database: process.env.PGDATABASE,
   },
+  app: {
+    host: process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost',
+    port: Number(process.env.PORT),
+    debug: process.env.NODE_ENV === 'development' ? { request: ['error'] } : {},
+  },
 };
 
 export { config };

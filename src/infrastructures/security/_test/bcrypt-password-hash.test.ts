@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 
-import { BcryptPasswordHash } from '../bcrypt-password-hash';
+import { BcryptPasswordHash } from '@/infrastructures/security/bcrypt-password-hash';
 
 describe('BcryptPasswordHash', () => {
   describe('hash function', () => {

@@ -1,5 +1,6 @@
 import { afterAll, afterEach, describe } from '@jest/globals';
 
+import { container } from '@/infrastructures/container';
 import { pool } from '@/infrastructures/database/postgres/pool';
 import { createServer } from '@/infrastructures/http/create-server';
 
@@ -17,7 +18,7 @@ describe('HTTP server', () => {
   describe('when POST /users', () => {
     it('should response 201 and persisted user', async () => {
       // Arrange
-      const server = await createServer();
+      const server = await createServer(container);
       const requestPayload = {
         username: 'john',
         password: 'secret',
