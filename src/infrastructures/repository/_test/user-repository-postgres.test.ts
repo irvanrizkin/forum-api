@@ -27,10 +27,10 @@ describe('UserRepositoryPostgres', () => {
       await UsersTableTestHelper.addUser({
         username: 'john',
       });
-      const userRepositoryPostgres = new UserRepositoryPostgres({
+      const userRepositoryPostgres = new UserRepositoryPostgres(
         pool,
-        idGenerator: fakeIdGenerator,
-      });
+        fakeIdGenerator,
+      );
 
       // Action & Assert
       await expect(
@@ -40,10 +40,10 @@ describe('UserRepositoryPostgres', () => {
 
     it('should not throw InvariantError when username available', async () => {
       // Arrange
-      const userRepositoryPostgres = new UserRepositoryPostgres({
+      const userRepositoryPostgres = new UserRepositoryPostgres(
         pool,
-        idGenerator: fakeIdGenerator,
-      });
+        fakeIdGenerator,
+      );
 
       // Action & Assert
       await expect(
@@ -60,10 +60,10 @@ describe('UserRepositoryPostgres', () => {
         password: 'secret',
         fullname: 'John Doe',
       });
-      const userRepositoryPostgres = new UserRepositoryPostgres({
+      const userRepositoryPostgres = new UserRepositoryPostgres(
         pool,
-        idGenerator: fakeIdGenerator,
-      });
+        fakeIdGenerator,
+      );
 
       // Action
       await userRepositoryPostgres.addUser(registerUser);
@@ -79,10 +79,10 @@ describe('UserRepositoryPostgres', () => {
         password: 'secret',
         fullname: 'John Doe',
       });
-      const userRepositoryPostgres = new UserRepositoryPostgres({
+      const userRepositoryPostgres = new UserRepositoryPostgres(
         pool,
-        idGenerator: fakeIdGenerator,
-      });
+        fakeIdGenerator,
+      );
 
       // Action
       const registeredUser = await userRepositoryPostgres.addUser(registerUser);

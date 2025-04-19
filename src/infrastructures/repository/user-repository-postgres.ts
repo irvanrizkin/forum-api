@@ -6,15 +6,10 @@ import { RegisterUser } from '@/domains/users/entities/register-user';
 import { RegisteredUser } from '@/domains/users/entities/registered-user';
 import { UserRepository } from '@/domains/users/user-repository';
 
-interface UserRepositoryPostgresDependencies {
-  pool: Pool;
-  idGenerator: () => string;
-}
-
 class UserRepositoryPostgres extends UserRepository {
   private pool: Pool;
   private idGenerator: () => string;
-  constructor({ pool, idGenerator }: UserRepositoryPostgresDependencies) {
+  constructor(pool: Pool, idGenerator: () => string) {
     super();
     this.pool = pool;
     this.idGenerator = idGenerator;
