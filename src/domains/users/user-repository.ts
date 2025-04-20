@@ -1,7 +1,8 @@
+import { RegisterUser } from './entities/register-user';
 import { RegisteredUser } from './entities/registered-user';
 
 class UserRepository {
-  async addUser(registerUser: object): Promise<RegisteredUser> {
+  async addUser(registerUser: RegisterUser): Promise<RegisteredUser> {
     void registerUser;
     throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }

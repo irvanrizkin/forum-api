@@ -1,3 +1,4 @@
+import { RegisterUser } from '@/domains/users/entities/register-user';
 import { UserRepository } from '@/domains/users/user-repository';
 
 import { PasswordHash } from '@/applications/security/password-hash';
@@ -26,11 +27,13 @@ class AddUserUseCase {
 
     await this.userRepository.verifyAvailableUsername(username);
     const hashedPassword = await this.passwordHash.hash(password);
-    return this.userRepository.addUser({
-      username,
-      password: hashedPassword,
-      fullname,
-    });
+    return this.userRepository.addUser(
+      new RegisterUser({
+        username,
+        password: hashedPassword,
+        fullname,
+      }),
+    );
   }
 }
 

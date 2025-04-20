@@ -13,4 +13,9 @@ export default [
   { languageOptions: { globals: globals.node } },
   ...tseslint.configs.strict,
   eslintPluginUnicorn.configs.recommended,
+  {
+    rules: {
+      'no-console': 'error',
+    },
+  },
 ];

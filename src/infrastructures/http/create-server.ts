@@ -1,7 +1,9 @@
-import Hapi from '@hapi/hapi';
+import Hapi, { Request, ResponseToolkit } from '@hapi/hapi';
 import { Container } from 'instances-container';
 
 import { config } from '@/commons/config';
+import { ClientError } from '@/commons/exceptions/client-error';
+import { DomainErrorTranslator } from '@/commons/exceptions/domain-error-translator';
 
 import { usersPlugin } from '@/infrastructures/http/api/users';
 
@@ -20,6 +22,32 @@ const createServer = async (container: Container) => {
       },
     },
   ]);
+
+  server.ext('onPreResponse', (request: Request, h: ResponseToolkit) => {
+    const { response } = request;
+
+    if (response instanceof Error) {
+      const translatedError = DomainErrorTranslator.translate(response);
+
+      if (translatedError instanceof ClientError) {
+        return h
+          .response({
+            status: 'fail',
+            message: translatedError.message,
+          })
+          .code(translatedError.statusCode);
+      }
+
+      return h
+        .response({
+          status: 'error',
+          message: 'internal server error',
+        })
+        .code(500);
+    }
+
+    return h.continue;
+  });
 
   return server;
 };
