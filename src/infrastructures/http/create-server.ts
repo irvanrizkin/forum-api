@@ -5,7 +5,7 @@ import { config } from '@/commons/config';
 import { ClientError } from '@/commons/exceptions/client-error';
 import { DomainErrorTranslator } from '@/commons/exceptions/domain-error-translator';
 
-import { usersPlugin } from '@/infrastructures/http/api/users';
+import { usersPlugin } from '@/interfaces/http/users';
 
 const createServer = async (container: Container) => {
   const server = Hapi.server({

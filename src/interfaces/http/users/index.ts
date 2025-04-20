@@ -1,8 +1,8 @@
 import { Server } from '@hapi/hapi';
 import { Container } from 'instances-container';
 
-import { UsersHandler } from '@/infrastructures/http/api/users/handler';
-import { routes } from '@/infrastructures/http/api/users/routes';
+import { UsersHandler } from '@/interfaces/http/users/handler';
+import { routes } from '@/interfaces/http/users/routes';
 
 interface UserPluginOptions {
   container: Container;

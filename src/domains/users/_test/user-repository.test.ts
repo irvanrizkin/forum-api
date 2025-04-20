@@ -1,8 +1,7 @@
 import { describe, expect, it } from '@jest/globals';
 
+import { RegisterUser } from '@/domains/users/entities/register-user';
 import { UserRepository } from '@/domains/users/user-repository';
-
-import { RegisterUser } from '../entities/register-user';
 
 describe('UserRepository interface', () => {
   it('should throw error when invoke abstract behavior', async () => {

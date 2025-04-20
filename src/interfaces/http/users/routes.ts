@@ -1,6 +1,6 @@
 import { ServerRoute } from '@hapi/hapi';
 
-import { UsersHandler } from '@/infrastructures/http/api/users/handler';
+import { UsersHandler } from '@/interfaces/http/users/handler';
 
 const routes = (handler: UsersHandler): ServerRoute[] => [
   {

@@ -1,5 +1,5 @@
-import { RegisterUser } from './entities/register-user';
-import { RegisteredUser } from './entities/registered-user';
+import { RegisterUser } from '@/domains/users/entities/register-user';
+import { RegisteredUser } from '@/domains/users/entities/registered-user';
 
 class UserRepository {
   async addUser(registerUser: RegisterUser): Promise<RegisteredUser> {

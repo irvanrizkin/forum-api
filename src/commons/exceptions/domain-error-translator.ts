@@ -1,4 +1,4 @@
-import { InvariantError } from './invariant-error';
+import { InvariantError } from '@/commons/exceptions/invariant-error';
 
 export const DomainErrorTranslator = {
   translate: (error: Error) => {
