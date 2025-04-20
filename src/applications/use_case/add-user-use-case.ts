@@ -25,13 +25,19 @@ class AddUserUseCase {
   async execute(useCasePayload: AddUserUseCasePayload) {
     const { username, password, fullname } = useCasePayload;
 
+    const registerUser = new RegisterUser({
+      username,
+      password,
+      fullname,
+    });
+
     await this.userRepository.verifyAvailableUsername(username);
     const hashedPassword = await this.passwordHash.hash(password);
     return this.userRepository.addUser(
       new RegisterUser({
-        username,
+        username: registerUser.username,
         password: hashedPassword,
-        fullname,
+        fullname: registerUser.fullname,
       }),
     );
   }

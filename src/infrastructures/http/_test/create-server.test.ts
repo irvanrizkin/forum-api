@@ -80,6 +80,48 @@ describe('HTTP server', () => {
     expect(responseJson.message).toEqual('cannot find needed property');
   });
 
+  it('should response 400 when request payload is empty object', async () => {
+    // Arrange
+    const server = await createServer(container);
+    const requestPayload = {};
+
+    // Action
+    const response = await server.inject({
+      method: 'POST',
+      url: '/users',
+      payload: requestPayload,
+    });
+
+    // Assert
+    const responseJson = JSON.parse(response.payload);
+    expect(response.statusCode).toEqual(400);
+    expect(responseJson.status).toEqual('fail');
+    expect(responseJson.message).toEqual('cannot find needed property');
+  });
+
+  it('should response 400 when request payload data type is wrong', async () => {
+    // Arrange
+    const server = await createServer(container);
+    const requestPayload = {
+      username: 123,
+      password: true,
+      fullname: 'John Doe',
+    };
+
+    // Action
+    const response = await server.inject({
+      method: 'POST',
+      url: '/users',
+      payload: requestPayload,
+    });
+
+    // Assert
+    const responseJson = JSON.parse(response.payload);
+    expect(response.statusCode).toEqual(400);
+    expect(responseJson.status).toEqual('fail');
+    expect(responseJson.message).toEqual('cannot find needed property');
+  });
+
   it('should response 400 when username more than 50 character', async () => {
     // Arrange
     const server = await createServer(container);
