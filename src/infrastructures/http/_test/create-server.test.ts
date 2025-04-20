@@ -16,6 +16,21 @@ describe('HTTP server', () => {
     await UsersTableTestHelper.cleanTable();
   });
 
+  it('should response 404 when request unregistered route', async () => {
+    // Arrange
+    const emptyContainer = new Container();
+    const server = await createServer(emptyContainer);
+
+    // Action
+    const response = await server.inject({
+      method: 'GET',
+      url: '/unregistered-route',
+    });
+
+    // Assert
+    expect(response.statusCode).toEqual(404);
+  });
+
   describe('when POST /users', () => {
     it('should response 201 and persisted user', async () => {
       // Arrange

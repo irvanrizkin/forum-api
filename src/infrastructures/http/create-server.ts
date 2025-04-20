@@ -38,6 +38,10 @@ const createServer = async (container: Container) => {
           .code(translatedError.statusCode);
       }
 
+      if (!response.isServer) {
+        return h.continue;
+      }
+
       return h
         .response({
           status: 'error',
