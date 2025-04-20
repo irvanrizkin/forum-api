@@ -9,12 +9,15 @@ export const DomainErrorTranslator = {
 
 const directories: { [key: string]: Error } = {
   'REGISTER_USER.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError(
-    'cannot find needed property',
+    'tidak dapat membuat user baru karena properti yang dibutuhkan tidak ada',
   ),
   'REGISTER_USER.USERNAME_LIMIT_CHAR': new InvariantError(
-    'username is too long',
+    'tidak dapat membuat user baru karena karakter username melebihi batas limit',
   ),
   'REGISTER_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER': new InvariantError(
-    'username contains restricted character',
+    'tidak dapat membuat user baru karena username mengandung karakter terlarang',
+  ),
+  'REGISTER_USER.USERNAME_NOT_AVAILABLE': new InvariantError(
+    'username tidak tersedia',
   ),
 };

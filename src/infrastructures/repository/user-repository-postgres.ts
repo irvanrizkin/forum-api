@@ -1,7 +1,5 @@
 import { Pool } from 'pg';
 
-import { InvariantError } from '@/commons/exceptions/invariant-error';
-
 import { RegisterUser } from '@/domains/users/entities/register-user';
 import { RegisteredUser } from '@/domains/users/entities/registered-user';
 import { UserRepository } from '@/domains/users/user-repository';
@@ -24,7 +22,7 @@ class UserRepositoryPostgres extends UserRepository {
     const result = await this.pool.query(query);
 
     if (result.rowCount) {
-      throw new InvariantError('username not available');
+      throw new Error('REGISTER_USER.USERNAME_NOT_AVAILABLE');
     }
   }
 

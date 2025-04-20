@@ -9,19 +9,34 @@ describe('DomainErrorTranslator', () => {
       DomainErrorTranslator.translate(
         new Error('REGISTER_USER.NOT_CONTAIN_NEEDED_PROPERTY'),
       ),
-    ).toStrictEqual(new InvariantError('cannot find needed property'));
+    ).toStrictEqual(
+      new InvariantError(
+        'tidak dapat membuat user baru karena properti yang dibutuhkan tidak ada',
+      ),
+    );
     expect(
       DomainErrorTranslator.translate(
         new Error('REGISTER_USER.USERNAME_LIMIT_CHAR'),
       ),
-    ).toStrictEqual(new InvariantError('username is too long'));
+    ).toStrictEqual(
+      new InvariantError(
+        'tidak dapat membuat user baru karena karakter username melebihi batas limit',
+      ),
+    );
     expect(
       DomainErrorTranslator.translate(
         new Error('REGISTER_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER'),
       ),
     ).toStrictEqual(
-      new InvariantError('username contains restricted character'),
+      new InvariantError(
+        'tidak dapat membuat user baru karena username mengandung karakter terlarang',
+      ),
     );
+    expect(
+      DomainErrorTranslator.translate(
+        new Error('REGISTER_USER.USERNAME_NOT_AVAILABLE'),
+      ),
+    ).toStrictEqual(new InvariantError('username tidak tersedia'));
   });
 
   it('should return the original error if no translation is found', () => {

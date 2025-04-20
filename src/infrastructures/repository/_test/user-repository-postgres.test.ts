@@ -35,7 +35,7 @@ describe('UserRepositoryPostgres', () => {
       // Action & Assert
       await expect(
         userRepositoryPostgres.verifyAvailableUsername('john'),
-      ).rejects.toThrowError(InvariantError);
+      ).rejects.toThrowError(Error);
     });
 
     it('should not throw InvariantError when username available', async () => {
