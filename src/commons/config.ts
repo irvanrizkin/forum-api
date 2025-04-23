@@ -23,6 +23,13 @@ const config = {
     port: Number(process.env.PORT),
     debug: process.env.NODE_ENV === 'development' ? { request: ['error'] } : {},
   },
+  tokenizer: {
+    accessTokenKey:
+      process.env.ACCESS_TOKEN_KEY ?? 'dr07uEXTLJdjGxZVU1lfestz0ZYby4zL',
+    refreshTokenKey:
+      process.env.REFRESH_TOKEN_KEY ?? '8QRvmwa4qNj7jZn1tHk4s7fbB8GwWdq7',
+    accessTokenAge: process.env.ACCESS_TOKEN_AGE ?? 3000,
+  },
 };
 
 export { config };
