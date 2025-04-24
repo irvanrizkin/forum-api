@@ -1,16 +1,10 @@
 import { RegisterUser } from '@/domains/users/entities/register-user';
 import { RegisteredUser } from '@/domains/users/entities/registered-user';
 
-class UserRepository {
-  async addUser(registerUser: RegisterUser): Promise<RegisteredUser> {
-    void registerUser;
-    throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED');
-  }
+abstract class UserRepository {
+  abstract addUser(registerUser: RegisterUser): Promise<RegisteredUser>;
 
-  async verifyAvailableUsername(username: string): Promise<void> {
-    void username;
-    throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED');
-  }
+  abstract verifyAvailableUsername(username: string): Promise<void>;
 }
 
 export { UserRepository };

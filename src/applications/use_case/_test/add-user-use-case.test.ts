@@ -20,18 +20,17 @@ describe('AddUserUseCase', () => {
       fullname: useCasePayload.fullname,
     });
 
-    const mockUserRepository = new UserRepository();
-    const mockPasswordHash = new PasswordHash();
+    class MockUserRepository extends UserRepository {
+      // eslint-disable-next-line unicorn/no-useless-undefined
+      verifyAvailableUsername = jest.fn().mockResolvedValue(undefined);
+      addUser = jest.fn().mockResolvedValue(mockRegisteredUser);
+    }
+    class MockPasswordHash extends PasswordHash {
+      hash = jest.fn().mockResolvedValue('encrypted_password');
+    }
 
-    mockUserRepository.verifyAvailableUsername = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve());
-    mockPasswordHash.hash = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve('encrypted_password'));
-    mockUserRepository.addUser = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve(mockRegisteredUser));
+    const mockUserRepository = new MockUserRepository();
+    const mockPasswordHash = new MockPasswordHash();
 
     const getUserUseCase = new AddUserUseCase({
       userRepository: mockUserRepository,
