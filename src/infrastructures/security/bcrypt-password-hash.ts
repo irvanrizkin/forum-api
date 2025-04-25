@@ -18,6 +18,12 @@ class BcryptPasswordHash extends PasswordHash {
     const encryptedPassword = await this.bcrypt.hash(password, this.saltRounds);
     return encryptedPassword;
   }
+
+  async compare(password: string, encryptedPassword: string): Promise<boolean> {
+    void password;
+    void encryptedPassword;
+    throw new Error('Method not implemented.');
+  }
 }
 
 export { BcryptPasswordHash };

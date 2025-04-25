@@ -42,6 +42,16 @@ class UserRepositoryPostgres implements UserRepository {
       fullname: result.rows[0].fullname,
     });
   }
+
+  getIdByUsername(username: string): Promise<string> {
+    void username;
+    throw new Error('Method not implemented.');
+  }
+
+  getPasswordByUsername(username: string): Promise<string> {
+    void username;
+    throw new Error('Method not implemented.');
+  }
 }
 
 export { UserRepositoryPostgres };

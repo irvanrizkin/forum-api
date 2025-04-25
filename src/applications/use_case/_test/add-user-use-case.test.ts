@@ -24,9 +24,12 @@ describe('AddUserUseCase', () => {
       // eslint-disable-next-line unicorn/no-useless-undefined
       verifyAvailableUsername = jest.fn().mockResolvedValue(undefined);
       addUser = jest.fn().mockResolvedValue(mockRegisteredUser);
+      getPasswordByUsername = jest.fn();
+      getIdByUsername = jest.fn();
     }
     class MockPasswordHash extends PasswordHash {
       hash = jest.fn().mockResolvedValue('encrypted_password');
+      compare = jest.fn();
     }
 
     const mockUserRepository = new MockUserRepository();

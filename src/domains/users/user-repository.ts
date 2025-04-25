@@ -5,6 +5,10 @@ abstract class UserRepository {
   abstract addUser(registerUser: RegisterUser): Promise<RegisteredUser>;
 
   abstract verifyAvailableUsername(username: string): Promise<void>;
+
+  abstract getPasswordByUsername(username: string): Promise<string>;
+
+  abstract getIdByUsername(username: string): Promise<string>;
 }
 
 export { UserRepository };
