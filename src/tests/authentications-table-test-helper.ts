@@ -1,7 +1,11 @@
 import { pool } from '@/infrastructures/database/postgres/pool';
 
+interface TokenPayload {
+  token: string;
+}
+
 const AuthenticationsTableTestHelper = {
-  async addUser(token: string): Promise<void> {
+  async addToken(token: string): Promise<void> {
     const query = {
       text: 'INSERT INTO authentications VALUES($1)',
       values: [token],
@@ -10,7 +14,7 @@ const AuthenticationsTableTestHelper = {
     await pool.query(query);
   },
 
-  async findUserById(token: string): Promise<unknown[]> {
+  async findToken(token: string): Promise<TokenPayload[]> {
     const query = {
       text: 'SELECT token FROM authentications WHERE token = $1',
       values: [token],
