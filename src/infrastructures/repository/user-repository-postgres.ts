@@ -1,5 +1,7 @@
 import { Pool } from 'pg';
 
+import { InvariantError } from '@/commons/exceptions/invariant-error';
+
 import { RegisterUser } from '@/domains/users/entities/register-user';
 import { RegisteredUser } from '@/domains/users/entities/registered-user';
 import { UserRepository } from '@/domains/users/user-repository';
@@ -43,14 +45,34 @@ class UserRepositoryPostgres implements UserRepository {
     });
   }
 
-  getIdByUsername(username: string): Promise<string> {
-    void username;
-    throw new Error('Method not implemented.');
+  async getIdByUsername(username: string): Promise<string> {
+    const query = {
+      text: 'SELECT id FROM users WHERE username = $1',
+      values: [username],
+    };
+
+    const result = await this.pool.query(query);
+
+    if (!result.rowCount) {
+      throw new InvariantError('username tidak ditemukan');
+    }
+
+    return result.rows[0].id;
   }
 
-  getPasswordByUsername(username: string): Promise<string> {
-    void username;
-    throw new Error('Method not implemented.');
+  async getPasswordByUsername(username: string): Promise<string> {
+    const query = {
+      text: 'SELECT password FROM users WHERE username = $1',
+      values: [username],
+    };
+
+    const result = await this.pool.query(query);
+
+    if (!result.rowCount) {
+      throw new InvariantError('user tidak ditemukan');
+    }
+
+    return result.rows[0].password;
   }
 }
 

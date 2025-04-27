@@ -1,3 +1,5 @@
+import { AuthenticationError } from '@/commons/exceptions/authentication-error';
+
 import { PasswordHash } from '@/applications/security/password-hash';
 
 interface Bcrypt {
@@ -20,9 +22,11 @@ class BcryptPasswordHash extends PasswordHash {
   }
 
   async compare(password: string, encryptedPassword: string): Promise<boolean> {
-    void password;
-    void encryptedPassword;
-    throw new Error('Method not implemented.');
+    const isMatch = await this.bcrypt.compare(password, encryptedPassword);
+    if (!isMatch) {
+      throw new AuthenticationError('kredensial yang Anda masukkan salah');
+    }
+    return isMatch;
   }
 }
 
