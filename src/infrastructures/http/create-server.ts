@@ -5,6 +5,7 @@ import { config } from '@/commons/config';
 import { ClientError } from '@/commons/exceptions/client-error';
 import { DomainErrorTranslator } from '@/commons/exceptions/domain-error-translator';
 
+import { authenticationsPlugin } from '@/interfaces/http/authentications';
 import { usersPlugin } from '@/interfaces/http/users';
 
 const createServer = async (container: Container) => {
@@ -17,6 +18,12 @@ const createServer = async (container: Container) => {
   await server.register([
     {
       plugin: usersPlugin,
+      options: {
+        container,
+      },
+    },
+    {
+      plugin: authenticationsPlugin,
       options: {
         container,
       },

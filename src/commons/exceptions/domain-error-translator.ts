@@ -20,4 +20,13 @@ const directories: { [key: string]: Error } = {
   'REGISTER_USER.USERNAME_NOT_AVAILABLE': new InvariantError(
     'username tidak tersedia',
   ),
+  'USER_LOGIN.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError(
+    'tidak dapat login karena properti yang dibutuhkan tidak ada/tidak sesuai',
+  ),
+  'REFRESH_AUTHENTICATION.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError(
+    'tidak dapat memperbarui token karena properti yang dibutuhkan tidak ada/tidak sesuai',
+  ),
+  'DELETE_AUTHENTICATION.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError(
+    'tidak dapat menghapus token karena properti yang dibutuhkan tidak ada/tidak sesuai',
+  ),
 };

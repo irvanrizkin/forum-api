@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { pool } from '@/infrastructures/database/postgres/pool';
 
 interface TokenPayload {

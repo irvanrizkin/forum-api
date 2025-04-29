@@ -1,3 +1,4 @@
+import { Server } from '@hapi/hapi';
 import { describe, expect, it } from '@jest/globals';
 
 import { container } from '@/infrastructures/container';
@@ -7,6 +8,12 @@ import { createServer } from '@/infrastructures/http/create-server';
 import { UsersTableTestHelper } from '@/tests/users-table-test-helper';
 
 describe('/users endpoint', () => {
+  let server: Server;
+
+  beforeEach(async () => {
+    server = await createServer(container);
+  });
+
   afterAll(async () => {
     await pool.end();
   });
@@ -18,7 +25,6 @@ describe('/users endpoint', () => {
   describe('when POST /users', () => {
     it('should response 201 and persisted user', async () => {
       // Arrange
-      const server = await createServer(container);
       const requestPayload = {
         username: 'john',
         password: 'secret',
@@ -44,7 +50,6 @@ describe('/users endpoint', () => {
 
   it('should response 400 when request payload not contain needed property', async () => {
     // Arrange
-    const server = await createServer(container);
     const requestPayload = {
       fullname: 'John Doe',
       password: 'secret',
@@ -68,7 +73,6 @@ describe('/users endpoint', () => {
 
   it('should response 400 when request payload is empty object', async () => {
     // Arrange
-    const server = await createServer(container);
     const requestPayload = {};
 
     // Action
@@ -89,7 +93,6 @@ describe('/users endpoint', () => {
 
   it('should response 400 when request payload data type is wrong', async () => {
     // Arrange
-    const server = await createServer(container);
     const requestPayload = {
       username: 123,
       password: true,
@@ -114,7 +117,6 @@ describe('/users endpoint', () => {
 
   it('should response 400 when username more than 50 character', async () => {
     // Arrange
-    const server = await createServer(container);
     const payload = {
       username: 'john'.repeat(15),
       fullname: 'John Doe',
@@ -139,7 +141,6 @@ describe('/users endpoint', () => {
 
   it('should response 400 when username contains restricted character', async () => {
     // Arrange
-    const server = await createServer(container);
     const payload = {
       username: 'john doe',
       fullname: 'John Doe',
@@ -164,7 +165,6 @@ describe('/users endpoint', () => {
 
   it('should response 400 when username unavailable', async () => {
     // Arrange
-    const server = await createServer(container);
     await UsersTableTestHelper.addUser({
       username: 'john',
     });

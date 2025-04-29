@@ -9,8 +9,8 @@
     "lint": "eslint .",
     "migrate": "node-pg-migrate",
     "migrate:test": "node-pg-migrate --envPath .test.env",
-    "test": "jest --setupFiles dotenv/config",
-    "test:watch": "jest --watchAll --coverage --setupFiles dotenv/config",
+    "test": "jest --setupFiles dotenv/config --runInBand",
+    "test:watch": "jest --watchAll --coverage --setupFiles dotenv/config --runInBand",
     "prepare": "husky install",
     "prettier": "prettier --write ."
   },
