@@ -1,8 +1,13 @@
-import { AddThread } from '@/domains/threads/entities/add-thread';
 import { AddedThread } from '@/domains/threads/entities/added-thread';
 
+interface AddThreadParameter {
+  title: string;
+  body: string;
+  userId: string;
+}
+
 abstract class ThreadRepository {
-  abstract addThread(thread: AddThread): Promise<AddedThread>;
+  abstract addThread(thread: AddThreadParameter): Promise<AddedThread>;
 }
 
 export { ThreadRepository };
