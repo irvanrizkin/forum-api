@@ -20,6 +20,9 @@ describe('AddCommentUseCase', () => {
         owner: 'user-123',
       }),
     );
+    verifyAvailableComment = jest.fn();
+    deleteComment = jest.fn();
+    verifyCommentOwner = jest.fn();
   }
 
   it('should orchestrating the add comment action correctly', async () => {

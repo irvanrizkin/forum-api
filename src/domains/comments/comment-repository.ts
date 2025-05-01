@@ -8,6 +8,12 @@ interface AddCommentParameter {
 
 abstract class CommentRepository {
   abstract addComment(comment: AddCommentParameter): Promise<AddedComment>;
+  abstract verifyAvailableComment(commentId: string): Promise<boolean>;
+  abstract deleteComment(commentId: string): Promise<void>;
+  abstract verifyCommentOwner(
+    commentId: string,
+    userId: string,
+  ): Promise<boolean>;
 }
 
 export { CommentRepository };
