@@ -8,6 +8,7 @@ interface AddThreadParameter {
 
 abstract class ThreadRepository {
   abstract addThread(thread: AddThreadParameter): Promise<AddedThread>;
+  abstract verifyAvailableThread(threadId: string): Promise<boolean>;
 }
 
 export { ThreadRepository };

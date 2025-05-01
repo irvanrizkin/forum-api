@@ -14,6 +14,7 @@ describe('AddThreadUseCase', () => {
         owner: 'user-123',
       }),
     );
+    verifyAvailableThread = jest.fn();
   }
 
   it('should orchestrating the add thread action correctly', async () => {
