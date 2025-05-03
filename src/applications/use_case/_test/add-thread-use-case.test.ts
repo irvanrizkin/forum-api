@@ -15,6 +15,7 @@ describe('AddThreadUseCase', () => {
       }),
     );
     verifyAvailableThread = jest.fn();
+    getThreadById = jest.fn();
   }
 
   it('should orchestrating the add thread action correctly', async () => {

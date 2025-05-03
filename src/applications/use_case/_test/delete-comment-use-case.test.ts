@@ -9,6 +9,7 @@ describe('DeleteCommentUseCase', () => {
   class MockThreadRepository extends ThreadRepository {
     verifyAvailableThread = jest.fn().mockResolvedValue(true);
     addThread = jest.fn();
+    getThreadById = jest.fn();
   }
 
   class MockCommentRepository extends CommentRepository {
