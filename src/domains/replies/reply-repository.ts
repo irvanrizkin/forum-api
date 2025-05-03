@@ -9,6 +9,9 @@ interface AddReplyParameter {
 
 abstract class ReplyRepository {
   abstract addReply(reply: AddReplyParameter): Promise<AddedReply>;
+  abstract verifyAvailableReply(replyId: string): Promise<boolean>;
+  abstract deleteReply(replyId: string): Promise<void>;
+  abstract verifyReplyOwner(replyId: string, userId: string): Promise<boolean>;
 }
 
 export { ReplyRepository };
