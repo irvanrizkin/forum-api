@@ -1,37 +1,9 @@
-import { Comment } from '@/domains/comments/entities/comment';
-import { Reply } from '@/domains/replies/entities/reply';
-import { ThreadRepository } from '@/domains/threads/thread-repository';
-
+import { MockCommentRepository } from '@/applications/use_case/_mocks/mock-comment-repository';
+import { MockReplyRepository } from '@/applications/use_case/_mocks/mock-reply-repository';
+import { MockThreadRepository } from '@/applications/use_case/_mocks/mock-thread-repository';
 import { DetailThreadUseCase } from '@/applications/use_case/detail-thread-use-case';
 
 describe('DetailThreadUseCase', () => {
-  const dummyReply = new Reply({
-    id: 'reply-123',
-    content: 'This is a reply content',
-    date: '2023-10-01T00:00:00.000Z',
-    username: 'john',
-  });
-  const dummyComment = new Comment({
-    id: 'comment-123',
-    content: 'This is a comment content',
-    date: '2023-10-01T00:00:00.000Z',
-    username: 'john',
-    replies: [dummyReply],
-  });
-
-  class MockThreadRepository extends ThreadRepository {
-    verifyAvailableThread = jest.fn().mockResolvedValue(true);
-    addThread = jest.fn();
-    getThreadById = jest.fn().mockResolvedValue({
-      id: 'thread-123',
-      title: 'This is a thread title',
-      body: 'This is a thread body',
-      date: '2023-10-01T00:00:00.000Z',
-      username: 'john',
-      comments: [dummyComment],
-    });
-  }
-
   it('should orchestrating the get thread detail action correctly', async () => {
     // Arrange
     const useCasePayload = {
@@ -39,9 +11,54 @@ describe('DetailThreadUseCase', () => {
     };
 
     const mockThreadRepository = new MockThreadRepository();
+    const mockCommentRepository = new MockCommentRepository();
+    const mockReplyRepository = new MockReplyRepository();
+
+    mockThreadRepository.verifyAvailableThread = jest
+      .fn()
+      .mockResolvedValue(true);
+    mockThreadRepository.getThreadById = jest.fn().mockResolvedValue({
+      id: 'thread-123',
+      title: 'This is a thread title',
+      body: 'This is a thread body',
+      date: '2023-10-01T00:00:00.000Z',
+      username: 'john',
+    });
+    mockCommentRepository.getCommentsByPostIds = jest.fn().mockResolvedValue([
+      {
+        id: 'comment-123',
+        content: 'This is a comment content',
+        date: '2023-10-01T00:00:00.000Z',
+        username: 'john',
+      },
+      {
+        id: 'comment-456',
+        content: 'This is another comment content',
+        date: '2023-10-01T00:00:00.000Z',
+        username: 'jane',
+      },
+    ]);
+    mockReplyRepository.getRepliesByCommentIds = jest.fn().mockResolvedValue([
+      {
+        id: 'reply-123',
+        content: 'This is a reply content',
+        date: '2023-10-01T00:00:00.000Z',
+        username: 'john',
+        commentId: 'comment-123',
+      },
+      {
+        id: 'reply-456',
+        content: 'This is another reply content',
+        date: '2023-10-01T00:00:00.000Z',
+        username: 'jane',
+        commentId: 'comment-456',
+      },
+    ]);
 
     const detailThreadUseCase = new DetailThreadUseCase({
       threadRepository: mockThreadRepository,
+      commentRepository: mockCommentRepository,
+      replyRepository: mockReplyRepository,
     });
 
     // Action
@@ -55,20 +72,36 @@ describe('DetailThreadUseCase', () => {
       date: '2023-10-01T00:00:00.000Z',
       username: 'john',
       comments: [
-        new Comment({
+        {
           id: 'comment-123',
           content: 'This is a comment content',
           date: '2023-10-01T00:00:00.000Z',
           username: 'john',
           replies: [
-            new Reply({
+            {
               id: 'reply-123',
               content: 'This is a reply content',
               date: '2023-10-01T00:00:00.000Z',
               username: 'john',
-            }),
+              commentId: 'comment-123',
+            },
           ],
-        }),
+        },
+        {
+          id: 'comment-456',
+          content: 'This is another comment content',
+          date: '2023-10-01T00:00:00.000Z',
+          username: 'jane',
+          replies: [
+            {
+              id: 'reply-456',
+              content: 'This is another reply content',
+              date: '2023-10-01T00:00:00.000Z',
+              username: 'jane',
+              commentId: 'comment-456',
+            },
+          ],
+        },
       ],
     });
     expect(mockThreadRepository.verifyAvailableThread).toHaveBeenCalledWith(
@@ -77,6 +110,13 @@ describe('DetailThreadUseCase', () => {
     expect(mockThreadRepository.getThreadById).toHaveBeenCalledWith(
       useCasePayload.threadId,
     );
+    expect(mockCommentRepository.getCommentsByPostIds).toHaveBeenCalledWith([
+      useCasePayload.threadId,
+    ]);
+    expect(mockReplyRepository.getRepliesByCommentIds).toHaveBeenCalledWith([
+      'comment-123',
+      'comment-456',
+    ]);
   });
 
   it('should throw error when thread not found', async () => {
@@ -86,6 +126,8 @@ describe('DetailThreadUseCase', () => {
     };
 
     const mockThreadRepository = new MockThreadRepository();
+    const mockCommentRepository = new MockCommentRepository();
+    const mockReplyRepository = new MockReplyRepository();
 
     mockThreadRepository.verifyAvailableThread = jest
       .fn()
@@ -93,6 +135,8 @@ describe('DetailThreadUseCase', () => {
 
     const detailThreadUseCase = new DetailThreadUseCase({
       threadRepository: mockThreadRepository,
+      commentRepository: mockCommentRepository,
+      replyRepository: mockReplyRepository,
     });
 
     // Action & Assert

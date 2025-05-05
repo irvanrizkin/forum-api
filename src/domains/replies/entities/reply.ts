@@ -3,6 +3,7 @@ interface ReplyPayload {
   content: string;
   date: string;
   username: string;
+  commentId: string;
 }
 
 class Reply {
@@ -10,14 +11,16 @@ class Reply {
   content: string;
   date: string;
   username: string;
+  commentId: string;
 
   constructor(payload: ReplyPayload) {
-    const { id, content, date, username } = payload;
+    const { id, content, date, username, commentId } = payload;
 
     this.id = id;
     this.content = content;
     this.date = date;
     this.username = username;
+    this.commentId = commentId;
   }
 }
 

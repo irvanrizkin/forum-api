@@ -10,6 +10,7 @@ describe('Reply entity', () => {
       content: 'This is a reply content',
       date: '2023-10-01T00:00:00.000Z',
       username: 'john',
+      commentId: 'comment-123',
     };
 
     // Action
@@ -20,5 +21,6 @@ describe('Reply entity', () => {
     expect(content).toEqual(payload.content);
     expect(date).toEqual(payload.date);
     expect(username).toEqual(payload.username);
+    expect(payload.commentId).toEqual(payload.commentId);
   });
 });

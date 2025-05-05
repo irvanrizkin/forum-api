@@ -1,3 +1,5 @@
+import { CommentRepository } from '@/domains/comments/comment-repository';
+import { ReplyRepository } from '@/domains/replies/reply-repository';
 import { ThreadRepository } from '@/domains/threads/thread-repository';
 
 interface DetailThreadUseCasePayload {
@@ -6,13 +8,23 @@ interface DetailThreadUseCasePayload {
 
 interface DetailThreadUseCaseDependencies {
   threadRepository: ThreadRepository;
+  commentRepository: CommentRepository;
+  replyRepository: ReplyRepository;
 }
 
 class DetailThreadUseCase {
   private threadRepository: ThreadRepository;
+  private commentRepository: CommentRepository;
+  private replyRepository: ReplyRepository;
 
-  constructor({ threadRepository }: DetailThreadUseCaseDependencies) {
+  constructor({
+    threadRepository,
+    commentRepository,
+    replyRepository,
+  }: DetailThreadUseCaseDependencies) {
     this.threadRepository = threadRepository;
+    this.commentRepository = commentRepository;
+    this.replyRepository = replyRepository;
   }
 
   async execute(useCasePayload: DetailThreadUseCasePayload) {
@@ -24,7 +36,27 @@ class DetailThreadUseCase {
       throw new Error('THREAD_NOT_FOUND');
     }
 
-    return this.threadRepository.getThreadById(threadId);
+    const thread = await this.threadRepository.getThreadById(threadId);
+    const comments = await this.commentRepository.getCommentsByPostIds([
+      threadId,
+    ]);
+    const commentIds = comments.map((comment) => comment.id);
+    const replies =
+      await this.replyRepository.getRepliesByCommentIds(commentIds);
+
+    const mappedComments = comments.map((comment) => ({
+      ...comment,
+      replies: replies
+        .filter((reply) => reply.commentId === comment.id)
+        .map((reply) => ({
+          ...reply,
+        })),
+    }));
+
+    return {
+      ...thread,
+      comments: mappedComments,
+    };
   }
 }
 
