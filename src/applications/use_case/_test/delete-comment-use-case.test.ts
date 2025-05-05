@@ -1,25 +1,10 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { CommentRepository } from '@/domains/comments/comment-repository';
-import { ThreadRepository } from '@/domains/threads/thread-repository';
-
+import { MockCommentRepository } from '@/applications/use_case/_mocks/mock-comment-repository';
+import { MockThreadRepository } from '@/applications/use_case/_mocks/mock-thread-repository';
 import { DeleteCommentUseCase } from '@/applications/use_case/delete-comment-use-case';
 
 describe('DeleteCommentUseCase', () => {
-  class MockThreadRepository extends ThreadRepository {
-    verifyAvailableThread = jest.fn().mockResolvedValue(true);
-    addThread = jest.fn();
-    getThreadById = jest.fn();
-  }
-
-  class MockCommentRepository extends CommentRepository {
-    addComment = jest.fn();
-    verifyAvailableComment = jest.fn().mockResolvedValue(true);
-    deleteComment = jest.fn();
-    verifyCommentOwner = jest.fn().mockResolvedValue(true);
-    getCommentByPostIds = jest.fn();
-  }
-
   it('should orchestrating the delete comment action correctly', async () => {
     // Arrange
     const useCasePayload = {
@@ -30,6 +15,16 @@ describe('DeleteCommentUseCase', () => {
 
     const mockThreadRepository = new MockThreadRepository();
     const mockCommentRepository = new MockCommentRepository();
+
+    mockThreadRepository.verifyAvailableThread = jest
+      .fn()
+      .mockResolvedValue(true);
+    mockCommentRepository.verifyAvailableComment = jest
+      .fn()
+      .mockResolvedValue(true);
+    mockCommentRepository.verifyCommentOwner = jest
+      .fn()
+      .mockResolvedValue(true);
 
     const deleteCommentUseCase = new DeleteCommentUseCase({
       threadRepository: mockThreadRepository,
@@ -92,6 +87,9 @@ describe('DeleteCommentUseCase', () => {
     const mockThreadRepository = new MockThreadRepository();
     const mockCommentRepository = new MockCommentRepository();
 
+    mockThreadRepository.verifyAvailableThread = jest
+      .fn()
+      .mockResolvedValue(true);
     mockCommentRepository.verifyAvailableComment = jest
       .fn()
       .mockResolvedValue(false);
@@ -122,6 +120,12 @@ describe('DeleteCommentUseCase', () => {
     const mockThreadRepository = new MockThreadRepository();
     const mockCommentRepository = new MockCommentRepository();
 
+    mockThreadRepository.verifyAvailableThread = jest
+      .fn()
+      .mockResolvedValue(true);
+    mockCommentRepository.verifyAvailableComment = jest
+      .fn()
+      .mockResolvedValue(true);
     mockCommentRepository.verifyCommentOwner = jest
       .fn()
       .mockResolvedValue(false);
