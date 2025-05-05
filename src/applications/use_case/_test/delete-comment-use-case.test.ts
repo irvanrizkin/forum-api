@@ -17,6 +17,7 @@ describe('DeleteCommentUseCase', () => {
     verifyAvailableComment = jest.fn().mockResolvedValue(true);
     deleteComment = jest.fn();
     verifyCommentOwner = jest.fn().mockResolvedValue(true);
+    getCommentByPostIds = jest.fn();
   }
 
   it('should orchestrating the delete comment action correctly', async () => {

@@ -1,39 +1,13 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { CommentRepository } from '@/domains/comments/comment-repository';
 import { AddedReply } from '@/domains/replies/entities/added-reply';
-import { ReplyRepository } from '@/domains/replies/reply-repository';
-import { ThreadRepository } from '@/domains/threads/thread-repository';
 
+import { MockCommentRepository } from '@/applications/use_case/_mocks/mock-comment-repository';
+import { MockReplyRepository } from '@/applications/use_case/_mocks/mock-reply-repository';
+import { MockThreadRepository } from '@/applications/use_case/_mocks/mock-thread-repository';
 import { AddReplyUseCase } from '@/applications/use_case/add-reply-use-case';
 
 describe('AddReplyUseCase', () => {
-  class MockThreadRepository extends ThreadRepository {
-    verifyAvailableThread = jest.fn().mockResolvedValue(true);
-    addThread = jest.fn();
-    getThreadById = jest.fn();
-  }
-
-  class MockCommentRepository extends CommentRepository {
-    addComment = jest.fn();
-    verifyAvailableComment = jest.fn().mockResolvedValue(true);
-    deleteComment = jest.fn();
-    verifyCommentOwner = jest.fn();
-  }
-
-  class MockReplyRepository extends ReplyRepository {
-    addReply = jest.fn().mockResolvedValue(
-      new AddedReply({
-        id: 'reply-123',
-        content: 'This is a reply content',
-        owner: 'user-123',
-      }),
-    );
-    verifyAvailableReply = jest.fn();
-    deleteReply = jest.fn();
-    verifyReplyOwner = jest.fn();
-  }
-
   it('should orchestrating the add reply action correctly', async () => {
     // Arrange
     const useCasePayload = {
@@ -46,6 +20,20 @@ describe('AddReplyUseCase', () => {
     const mockThreadRepository = new MockThreadRepository();
     const mockCommentRepository = new MockCommentRepository();
     const mockReplyRepository = new MockReplyRepository();
+
+    mockThreadRepository.verifyAvailableThread = jest
+      .fn()
+      .mockResolvedValue(true);
+    mockCommentRepository.verifyAvailableComment = jest
+      .fn()
+      .mockResolvedValue(true);
+    mockReplyRepository.addReply = jest.fn().mockResolvedValue(
+      new AddedReply({
+        id: 'reply-123',
+        content: useCasePayload.content,
+        owner: useCasePayload.userId,
+      }),
+    );
 
     const addReplyUseCase = new AddReplyUseCase({
       threadRepository: mockThreadRepository,
@@ -124,6 +112,9 @@ describe('AddReplyUseCase', () => {
     const mockCommentRepository = new MockCommentRepository();
     const mockReplyRepository = new MockReplyRepository();
 
+    mockThreadRepository.verifyAvailableThread = jest
+      .fn()
+      .mockResolvedValue(true);
     mockCommentRepository.verifyAvailableComment = jest
       .fn()
       .mockResolvedValue(false);

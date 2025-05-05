@@ -13,4 +13,4 @@ abstract class ThreadRepository {
   abstract getThreadById(threadId: string): Promise<Thread>;
 }
 
-export { ThreadRepository };
+export { ThreadRepository, AddThreadParameter };

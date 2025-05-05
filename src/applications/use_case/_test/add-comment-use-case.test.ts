@@ -1,31 +1,12 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { CommentRepository } from '@/domains/comments/comment-repository';
 import { AddedComment } from '@/domains/comments/entities/added-comment';
-import { ThreadRepository } from '@/domains/threads/thread-repository';
 
+import { MockCommentRepository } from '@/applications/use_case/_mocks/mock-comment-repository';
+import { MockThreadRepository } from '@/applications/use_case/_mocks/mock-thread-repository';
 import { AddCommentUseCase } from '@/applications/use_case/add-comment-use-case';
 
 describe('AddCommentUseCase', () => {
-  class MockThreadRepository extends ThreadRepository {
-    verifyAvailableThread = jest.fn().mockResolvedValue(true);
-    addThread = jest.fn();
-    getThreadById = jest.fn();
-  }
-
-  class MockCommentRepository extends CommentRepository {
-    addComment = jest.fn().mockResolvedValue(
-      new AddedComment({
-        id: 'comment-123',
-        content: 'This is a comment content',
-        owner: 'user-123',
-      }),
-    );
-    verifyAvailableComment = jest.fn();
-    deleteComment = jest.fn();
-    verifyCommentOwner = jest.fn();
-  }
-
   it('should orchestrating the add comment action correctly', async () => {
     // Arrange
     const useCasePayload = {
@@ -36,6 +17,17 @@ describe('AddCommentUseCase', () => {
 
     const mockThreadRepository = new MockThreadRepository();
     const mockCommentRepository = new MockCommentRepository();
+
+    mockThreadRepository.verifyAvailableThread = jest
+      .fn()
+      .mockResolvedValue(true);
+    mockCommentRepository.addComment = jest.fn().mockResolvedValue(
+      new AddedComment({
+        id: 'comment-123',
+        content: useCasePayload.content,
+        owner: useCasePayload.userId,
+      }),
+    );
 
     const addCommentUseCase = new AddCommentUseCase({
       threadRepository: mockThreadRepository,

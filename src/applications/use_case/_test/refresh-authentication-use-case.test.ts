@@ -1,28 +1,10 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { AuthenticationRepository } from '@/domains/authentications/authentication-repository';
-
-import { AuthenticationTokenManager } from '@/applications/security/authentication-token-manager';
+import { MockAuthenticationRepository } from '@/applications/use_case/_mocks/mock-authentication-repository';
+import { MockAuthenticationTokenManager } from '@/applications/use_case/_mocks/mock-authentication-token-manager';
 import { RefreshAuthenticationUseCase } from '@/applications/use_case/refresh-authentication-use-case';
 
 describe('RefreshAuthenticationUseCase', () => {
-  class MockAuthenticationRepository extends AuthenticationRepository {
-    addToken = jest.fn();
-    deleteToken = jest.fn();
-    // eslint-disable-next-line unicorn/no-useless-undefined
-    checkAvailabilityToken = jest.fn().mockResolvedValue(undefined);
-  }
-  class MockAuthenticationTokenManager extends AuthenticationTokenManager {
-    createRefreshToken = jest.fn();
-    createAccessToken = jest.fn().mockResolvedValue('access_token');
-    // eslint-disable-next-line unicorn/no-useless-undefined
-    verifyRefreshToken = jest.fn().mockResolvedValue(undefined);
-    decodePayload = jest.fn().mockResolvedValue({
-      id: 'user-016',
-      username: 'john',
-    });
-  }
-
   it('should orchestrating the refresh authentication action correctly', async () => {
     // Arrange
     const useCasePayload = {
@@ -30,6 +12,19 @@ describe('RefreshAuthenticationUseCase', () => {
     };
     const mockAuthenticationRepository = new MockAuthenticationRepository();
     const mockAuthenticationTokenManager = new MockAuthenticationTokenManager();
+
+    mockAuthenticationRepository.checkAvailabilityToken = jest
+      .fn()
+      .mockResolvedValue(true);
+    mockAuthenticationTokenManager.verifyRefreshToken = jest
+      .fn()
+      .mockReturnValue(Promise.resolve());
+    mockAuthenticationTokenManager.decodePayload = jest
+      .fn()
+      .mockReturnValue(Promise.resolve({ id: 'user-016', username: 'john' }));
+    mockAuthenticationTokenManager.createAccessToken = jest
+      .fn()
+      .mockResolvedValue('access_token');
 
     const refreshAuthenticationUseCase = new RefreshAuthenticationUseCase({
       authenticationRepository: mockAuthenticationRepository,

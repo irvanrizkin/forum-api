@@ -1,11 +1,8 @@
-import { Reply } from '@/domains/replies/entities/reply';
-
 interface CommentPayload {
   id: string;
   content: string;
   date: string;
   username: string;
-  replies: Reply[];
 }
 
 class Comment {
@@ -13,16 +10,14 @@ class Comment {
   content: string;
   date: string;
   username: string;
-  replies: Reply[];
 
   constructor(payload: CommentPayload) {
-    const { id, content, date, username, replies } = payload;
+    const { id, content, date, username } = payload;
 
     this.id = id;
     this.content = content;
     this.date = date;
     this.username = username;
-    this.replies = replies;
   }
 }
 

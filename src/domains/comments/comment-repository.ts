@@ -1,4 +1,5 @@
 import { AddedComment } from '@/domains/comments/entities/added-comment';
+import { Comment } from '@/domains/comments/entities/comment';
 
 interface AddCommentParameter {
   content: string;
@@ -14,6 +15,7 @@ abstract class CommentRepository {
     commentId: string,
     userId: string,
   ): Promise<boolean>;
+  abstract getCommentsByPostIds(postIds: string[]): Promise<Comment[]>;
 }
 
 export { CommentRepository };

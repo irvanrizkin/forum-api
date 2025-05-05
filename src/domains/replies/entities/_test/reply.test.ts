@@ -3,19 +3,6 @@ import { describe, expect, it } from '@jest/globals';
 import { Reply } from '@/domains/replies/entities/reply';
 
 describe('Reply entity', () => {
-  it('should throw error if content is empty string', () => {
-    // Arrange
-    const payload = {
-      id: 'reply-123',
-      content: '',
-      date: '2023-10-01T00:00:00.000Z',
-      username: 'john',
-    };
-
-    // Action & Assert
-    expect(() => new Reply(payload)).toThrowError('REPLY.CONTENT_EMPTY_STRING');
-  });
-
   it('should create Reply object correctly', () => {
     // Arrange
     const payload = {

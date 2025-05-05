@@ -1,9 +1,9 @@
 import { describe, expect, it } from '@jest/globals';
 
 import { RegisteredUser } from '@/domains/users/entities/registered-user';
-import { UserRepository } from '@/domains/users/user-repository';
 
-import { PasswordHash } from '@/applications/security/password-hash';
+import { MockPasswordHash } from '@/applications/use_case/_mocks/mock-password-hash';
+import { MockUserRepository } from '@/applications/use_case/_mocks/mock-user-repository';
 import { AddUserUseCase } from '@/applications/use_case/add-user-use-case';
 
 describe('AddUserUseCase', () => {
@@ -20,20 +20,16 @@ describe('AddUserUseCase', () => {
       fullname: useCasePayload.fullname,
     });
 
-    class MockUserRepository extends UserRepository {
-      // eslint-disable-next-line unicorn/no-useless-undefined
-      verifyAvailableUsername = jest.fn().mockResolvedValue(undefined);
-      addUser = jest.fn().mockResolvedValue(mockRegisteredUser);
-      getPasswordByUsername = jest.fn();
-      getIdByUsername = jest.fn();
-    }
-    class MockPasswordHash extends PasswordHash {
-      hash = jest.fn().mockResolvedValue('encrypted_password');
-      compare = jest.fn();
-    }
-
     const mockUserRepository = new MockUserRepository();
     const mockPasswordHash = new MockPasswordHash();
+
+    mockUserRepository.addUser = jest
+      .fn()
+      .mockResolvedValue(mockRegisteredUser);
+    mockUserRepository.verifyAvailableUsername = jest
+      .fn()
+      .mockReturnValue(Promise.resolve());
+    mockPasswordHash.hash = jest.fn().mockResolvedValue('encrypted_password');
 
     const getUserUseCase = new AddUserUseCase({
       userRepository: mockUserRepository,
