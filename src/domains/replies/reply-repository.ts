@@ -3,7 +3,6 @@ import { Reply } from '@/domains/replies/entities/reply';
 
 interface AddReplyParameter {
   content: string;
-  threadId: string;
   commentId: string;
   userId: string;
 }

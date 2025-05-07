@@ -61,7 +61,6 @@ describe('AddReplyUseCase', () => {
     expect(mockReplyRepository.addReply).toBeCalledWith({
       content: useCasePayload.content,
       commentId: useCasePayload.commentId,
-      threadId: useCasePayload.threadId,
       userId: useCasePayload.userId,
     });
   });

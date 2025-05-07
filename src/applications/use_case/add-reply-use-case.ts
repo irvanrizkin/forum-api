@@ -51,7 +51,6 @@ class AddReplyUseCase {
     return this.replyRepository.addReply({
       content,
       commentId,
-      threadId,
       userId,
     });
   }
