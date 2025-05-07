@@ -28,7 +28,7 @@ class ThreadRepositoryPostgres implements ThreadRepository {
     const id = `${this.idGenerator()}`;
 
     const query = {
-      text: 'INSERT INTO threads (id, title, body, owner) VALUES($1, $2, $3, $4) RETURNING id, title, owner',
+      text: 'INSERT INTO threads (id, title, body, user_id) VALUES($1, $2, $3, $4) RETURNING id, title, user_id',
       values: [id, title, body, userId],
     };
 
@@ -37,7 +37,7 @@ class ThreadRepositoryPostgres implements ThreadRepository {
     return new AddedThread({
       id: result.rows[0].id,
       title: result.rows[0].title,
-      owner: result.rows[0].owner,
+      owner: result.rows[0].user_id,
     });
   }
 
@@ -60,7 +60,7 @@ class ThreadRepositoryPostgres implements ThreadRepository {
     const query = {
       text: `SELECT threads.id, threads.title, threads.body, threads.date, users.username
              FROM threads
-             LEFT JOIN users ON users.id = threads.owner
+             LEFT JOIN users ON users.id = threads.user_id
              WHERE threads.id = $1`,
       values: [threadId],
     };

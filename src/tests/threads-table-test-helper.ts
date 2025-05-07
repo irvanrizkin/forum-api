@@ -5,7 +5,7 @@ interface ThreadPayload {
   id: string;
   title: string;
   body: string;
-  owner: string;
+  userId: string;
 }
 
 const ThreadsTableTestHelper = {
@@ -13,11 +13,11 @@ const ThreadsTableTestHelper = {
     id = 'thread-1',
     title = 'Thread Title',
     body = 'Thread Body',
-    owner = 'user-1',
+    userId = 'user-1',
   }: ThreadPayload): Promise<void> {
     const query = {
-      text: 'INSERT INTO threads (id, title, body, owner) VALUES($1, $2, $3, $4)',
-      values: [id, title, body, owner],
+      text: 'INSERT INTO threads (id, title, body, user_id) VALUES($1, $2, $3, $4)',
+      values: [id, title, body, userId],
     };
 
     await pool.query(query);

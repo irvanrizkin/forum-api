@@ -75,7 +75,7 @@ describe('ThreadRepositoryPostgres', () => {
         id: 'thread-017',
         title: 'This is a thread title',
         body: 'This is a thread body',
-        owner: 'user-123',
+        userId: 'user-123',
       });
 
       // Action & Assert
@@ -90,7 +90,7 @@ describe('ThreadRepositoryPostgres', () => {
         id: 'thread-017',
         title: 'This is a thread title',
         body: 'This is a thread body',
-        owner: 'user-123',
+        userId: 'user-123',
       });
 
       // Action & Assert
@@ -107,7 +107,7 @@ describe('ThreadRepositoryPostgres', () => {
         id: 'thread-017',
         title: 'This is a thread title',
         body: 'This is a thread body',
-        owner: 'user-123',
+        userId: 'user-123',
       });
 
       // Action & Assert
@@ -122,7 +122,7 @@ describe('ThreadRepositoryPostgres', () => {
         id: 'thread-017',
         title: 'This is a thread title',
         body: 'This is a thread body',
-        owner: 'user-123',
+        userId: 'user-123',
       });
 
       // Action

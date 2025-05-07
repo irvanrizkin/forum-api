@@ -30,13 +30,13 @@ describe('CommentRepositoryPostgres', () => {
       id: 'thread-123',
       title: 'Thread Title',
       body: 'Thread Body',
-      owner: 'user-123',
+      userId: 'user-123',
     });
     await ThreadsTableTestHelper.addThread({
       id: 'thread-456',
       title: 'Thread Title',
       body: 'Thread Body',
-      owner: 'user-123',
+      userId: 'user-123',
     });
   });
 
