@@ -15,7 +15,7 @@ abstract class CommentRepository {
     commentId: string,
     userId: string,
   ): Promise<boolean>;
-  abstract getCommentsByPostIds(postIds: string[]): Promise<Comment[]>;
+  abstract getCommentsByThreadIds(postIds: string[]): Promise<Comment[]>;
 }
 
-export { CommentRepository };
+export { CommentRepository, AddCommentParameter };

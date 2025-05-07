@@ -5,7 +5,7 @@ class MockCommentRepository extends CommentRepository {
   verifyAvailableComment = jest.fn();
   deleteComment = jest.fn();
   verifyCommentOwner = jest.fn();
-  getCommentsByPostIds = jest.fn();
+  getCommentsByThreadIds = jest.fn();
 }
 
 export { MockCommentRepository };

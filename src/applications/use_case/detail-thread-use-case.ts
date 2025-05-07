@@ -37,7 +37,7 @@ class DetailThreadUseCase {
     }
 
     const thread = await this.threadRepository.getThreadById(threadId);
-    const comments = await this.commentRepository.getCommentsByPostIds([
+    const comments = await this.commentRepository.getCommentsByThreadIds([
       threadId,
     ]);
     const commentIds = comments.map((comment) => comment.id);

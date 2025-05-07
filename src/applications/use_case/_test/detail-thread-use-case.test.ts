@@ -24,7 +24,7 @@ describe('DetailThreadUseCase', () => {
       date: '2023-10-01T00:00:00.000Z',
       username: 'john',
     });
-    mockCommentRepository.getCommentsByPostIds = jest.fn().mockResolvedValue([
+    mockCommentRepository.getCommentsByThreadIds = jest.fn().mockResolvedValue([
       {
         id: 'comment-123',
         content: 'This is a comment content',
@@ -110,7 +110,7 @@ describe('DetailThreadUseCase', () => {
     expect(mockThreadRepository.getThreadById).toHaveBeenCalledWith(
       useCasePayload.threadId,
     );
-    expect(mockCommentRepository.getCommentsByPostIds).toHaveBeenCalledWith([
+    expect(mockCommentRepository.getCommentsByThreadIds).toHaveBeenCalledWith([
       useCasePayload.threadId,
     ]);
     expect(mockReplyRepository.getRepliesByCommentIds).toHaveBeenCalledWith([
