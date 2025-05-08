@@ -4,6 +4,7 @@ import { Container } from 'instances-container';
 import { CommentPayloadSchema } from '@/commons/validations/comment-payload-validator';
 
 import { AddCommentUseCase } from '@/applications/use_case/add-comment-use-case';
+import { DeleteCommentUseCase } from '@/applications/use_case/delete-comment-use-case';
 
 class CommentsHandler {
   private container: Container;
@@ -36,6 +37,28 @@ class CommentsHandler {
         },
       })
       .code(201);
+  };
+
+  deleteCommentHandler = async (request: Request, h: ResponseToolkit) => {
+    const { threadId, commentId } = request.params;
+    const userId = request.auth.credentials.userId as string;
+
+    const deleteCommentUseCase = this.container.getInstance(
+      'DeleteCommentUseCase',
+    ) as DeleteCommentUseCase;
+
+    await deleteCommentUseCase.execute({
+      threadId,
+      commentId,
+      userId,
+    });
+
+    return h
+      .response({
+        status: 'success',
+        message: 'komentar berhasil dihapus',
+      })
+      .code(200);
   };
 }
 

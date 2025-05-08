@@ -1,3 +1,4 @@
+import { AuthorizationError } from '@/commons/exceptions/authorization-error';
 import { InvariantError } from '@/commons/exceptions/invariant-error';
 import { NotFoundError } from '@/commons/exceptions/not-found-error';
 
@@ -36,5 +37,9 @@ const directories: { [key: string]: Error } = {
   THREAD_NOT_FOUND: new NotFoundError('thread tidak ditemukan'),
   'COMMENT.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError(
     'tidak dapat membuat komentar karena properti yang dibutuhkan tidak ada/tidak sesuai',
+  ),
+  COMMENT_NOT_FOUND: new NotFoundError('komentar tidak ditemukan'),
+  COMMENT_NOT_OWNER: new AuthorizationError(
+    'anda tidak berhak mengakses resource ini',
   ),
 };

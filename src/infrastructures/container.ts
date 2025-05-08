@@ -14,6 +14,7 @@ import { PasswordHash } from '@/applications/security/password-hash';
 import { AddCommentUseCase } from '@/applications/use_case/add-comment-use-case';
 import { AddThreadUseCase } from '@/applications/use_case/add-thread-use-case';
 import { AddUserUseCase } from '@/applications/use_case/add-user-use-case';
+import { DeleteCommentUseCase } from '@/applications/use_case/delete-comment-use-case';
 import { DetailThreadUseCase } from '@/applications/use_case/detail-thread-use-case';
 import { LoginUserUseCase } from '@/applications/use_case/login-user-use-case';
 import { LogoutUserUseCase } from '@/applications/use_case/logout-user-use-case';
@@ -228,6 +229,23 @@ container.register([
         {
           name: 'commentRepository',
           internal: CommentRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: DeleteCommentUseCase.name,
+    Class: DeleteCommentUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'commentRepository',
+          internal: CommentRepository.name,
+        },
+        {
+          name: 'threadRepository',
+          internal: ThreadRepository.name,
         },
       ],
     },
