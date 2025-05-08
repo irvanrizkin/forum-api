@@ -29,4 +29,7 @@ const directories: { [key: string]: Error } = {
   'DELETE_AUTHENTICATION.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError(
     'tidak dapat menghapus token karena properti yang dibutuhkan tidak ada/tidak sesuai',
   ),
+  'THREAD.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError(
+    'tidak dapat membuat thread karena properti yang dibutuhkan tidak ada/tidak sesuai',
+  ),
 };

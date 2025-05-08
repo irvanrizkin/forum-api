@@ -37,6 +37,42 @@ describe('DomainErrorTranslator', () => {
         new Error('REGISTER_USER.USERNAME_NOT_AVAILABLE'),
       ),
     ).toStrictEqual(new InvariantError('username tidak tersedia'));
+    expect(
+      DomainErrorTranslator.translate(
+        new Error('USER_LOGIN.NOT_CONTAIN_NEEDED_PROPERTY'),
+      ),
+    ).toStrictEqual(
+      new InvariantError(
+        'tidak dapat login karena properti yang dibutuhkan tidak ada/tidak sesuai',
+      ),
+    );
+    expect(
+      DomainErrorTranslator.translate(
+        new Error('REFRESH_AUTHENTICATION.NOT_CONTAIN_NEEDED_PROPERTY'),
+      ),
+    ).toStrictEqual(
+      new InvariantError(
+        'tidak dapat memperbarui token karena properti yang dibutuhkan tidak ada/tidak sesuai',
+      ),
+    );
+    expect(
+      DomainErrorTranslator.translate(
+        new Error('DELETE_AUTHENTICATION.NOT_CONTAIN_NEEDED_PROPERTY'),
+      ),
+    ).toStrictEqual(
+      new InvariantError(
+        'tidak dapat menghapus token karena properti yang dibutuhkan tidak ada/tidak sesuai',
+      ),
+    );
+    expect(
+      DomainErrorTranslator.translate(
+        new Error('THREAD.NOT_CONTAIN_NEEDED_PROPERTY'),
+      ),
+    ).toStrictEqual(
+      new InvariantError(
+        'tidak dapat membuat thread karena properti yang dibutuhkan tidak ada/tidak sesuai',
+      ),
+    );
   });
 
   it('should return the original error if no translation is found', () => {

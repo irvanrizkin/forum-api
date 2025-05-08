@@ -1,4 +1,5 @@
 import Hapi, { Request, ResponseToolkit } from '@hapi/hapi';
+import Jwt from '@hapi/jwt';
 import { Container } from 'instances-container';
 
 import { config } from '@/commons/config';
@@ -6,6 +7,7 @@ import { ClientError } from '@/commons/exceptions/client-error';
 import { DomainErrorTranslator } from '@/commons/exceptions/domain-error-translator';
 
 import { authenticationsPlugin } from '@/interfaces/http/authentications';
+import { threadsPlugin } from '@/interfaces/http/threads';
 import { usersPlugin } from '@/interfaces/http/users';
 
 const createServer = async (container: Container) => {
@@ -17,6 +19,36 @@ const createServer = async (container: Container) => {
 
   await server.register([
     {
+      plugin: Jwt,
+    },
+  ]);
+
+  server.auth.strategy('forumapi_jwt', 'jwt', {
+    keys: config.tokenizer.accessTokenKey,
+    verify: {
+      aud: false,
+      iss: false,
+      sub: false,
+      maxAgeSec: config.tokenizer.accessTokenAge,
+    },
+    validate: (artifacts: {
+      decoded: {
+        payload: {
+          id: string;
+        };
+      };
+    }) => {
+      return {
+        isValid: true,
+        credentials: {
+          userId: artifacts.decoded.payload.id,
+        },
+      };
+    },
+  });
+
+  await server.register([
+    {
       plugin: usersPlugin,
       options: {
         container,
@@ -24,6 +56,12 @@ const createServer = async (container: Container) => {
     },
     {
       plugin: authenticationsPlugin,
+      options: {
+        container,
+      },
+    },
+    {
+      plugin: threadsPlugin,
       options: {
         container,
       },
