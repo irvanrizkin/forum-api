@@ -2,6 +2,7 @@ import { describe, expect, it } from '@jest/globals';
 
 import { DomainErrorTranslator } from '@/commons/exceptions/domain-error-translator';
 import { InvariantError } from '@/commons/exceptions/invariant-error';
+import { NotFoundError } from '@/commons/exceptions/not-found-error';
 
 describe('DomainErrorTranslator', () => {
   it('should translate error correctly', () => {
@@ -71,6 +72,18 @@ describe('DomainErrorTranslator', () => {
     ).toStrictEqual(
       new InvariantError(
         'tidak dapat membuat thread karena properti yang dibutuhkan tidak ada/tidak sesuai',
+      ),
+    );
+    expect(
+      DomainErrorTranslator.translate(new Error('THREAD_NOT_FOUND')),
+    ).toStrictEqual(new NotFoundError('thread tidak ditemukan'));
+    expect(
+      DomainErrorTranslator.translate(
+        new Error('COMMENT.NOT_CONTAIN_NEEDED_PROPERTY'),
+      ),
+    ).toStrictEqual(
+      new InvariantError(
+        'tidak dapat membuat komentar karena properti yang dibutuhkan tidak ada/tidak sesuai',
       ),
     );
   });

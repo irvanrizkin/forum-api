@@ -7,6 +7,7 @@ import { ClientError } from '@/commons/exceptions/client-error';
 import { DomainErrorTranslator } from '@/commons/exceptions/domain-error-translator';
 
 import { authenticationsPlugin } from '@/interfaces/http/authentications';
+import { commentsPlugin } from '@/interfaces/http/comments';
 import { threadsPlugin } from '@/interfaces/http/threads';
 import { usersPlugin } from '@/interfaces/http/users';
 
@@ -62,6 +63,12 @@ const createServer = async (container: Container) => {
     },
     {
       plugin: threadsPlugin,
+      options: {
+        container,
+      },
+    },
+    {
+      plugin: commentsPlugin,
       options: {
         container,
       },

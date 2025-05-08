@@ -11,6 +11,7 @@ import { UserRepository } from '@/domains/users/user-repository';
 
 import { AuthenticationTokenManager } from '@/applications/security/authentication-token-manager';
 import { PasswordHash } from '@/applications/security/password-hash';
+import { AddCommentUseCase } from '@/applications/use_case/add-comment-use-case';
 import { AddThreadUseCase } from '@/applications/use_case/add-thread-use-case';
 import { AddUserUseCase } from '@/applications/use_case/add-user-use-case';
 import { DetailThreadUseCase } from '@/applications/use_case/detail-thread-use-case';
@@ -20,6 +21,7 @@ import { RefreshAuthenticationUseCase } from '@/applications/use_case/refresh-au
 
 import { pool } from '@/infrastructures/database/postgres/pool';
 import { AuthenticationRepositoryPostgres } from '@/infrastructures/repository/authentication-repository-postgres';
+import { CommentRepositoryPostgres } from '@/infrastructures/repository/comment-repository-postgres';
 import { ThreadRepositoryPostgres } from '@/infrastructures/repository/thread-repository-postgres';
 import { UserRepositoryPostgres } from '@/infrastructures/repository/user-repository-postgres';
 import { BcryptPasswordHash } from '@/infrastructures/security/bcrypt-password-hash';
@@ -64,6 +66,20 @@ container.register([
         },
         {
           concrete: () => 'thread-' + nanoid(),
+        },
+      ],
+    },
+  },
+  {
+    key: CommentRepository.name,
+    Class: CommentRepositoryPostgres,
+    parameter: {
+      dependencies: [
+        {
+          concrete: pool,
+        },
+        {
+          concrete: () => 'comment-' + nanoid(),
         },
       ],
     },
@@ -195,6 +211,23 @@ container.register([
         {
           name: 'replyRepository',
           internal: ReplyRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: AddCommentUseCase.name,
+    Class: AddCommentUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'threadRepository',
+          internal: ThreadRepository.name,
+        },
+        {
+          name: 'commentRepository',
+          internal: CommentRepository.name,
         },
       ],
     },

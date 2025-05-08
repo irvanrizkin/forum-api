@@ -1,4 +1,5 @@
 import { InvariantError } from '@/commons/exceptions/invariant-error';
+import { NotFoundError } from '@/commons/exceptions/not-found-error';
 
 export const DomainErrorTranslator = {
   translate: (error: Error) => {
@@ -31,5 +32,9 @@ const directories: { [key: string]: Error } = {
   ),
   'THREAD.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError(
     'tidak dapat membuat thread karena properti yang dibutuhkan tidak ada/tidak sesuai',
+  ),
+  THREAD_NOT_FOUND: new NotFoundError('thread tidak ditemukan'),
+  'COMMENT.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError(
+    'tidak dapat membuat komentar karena properti yang dibutuhkan tidak ada/tidak sesuai',
   ),
 };
