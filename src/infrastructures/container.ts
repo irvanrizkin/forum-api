@@ -12,6 +12,7 @@ import { UserRepository } from '@/domains/users/user-repository';
 import { AuthenticationTokenManager } from '@/applications/security/authentication-token-manager';
 import { PasswordHash } from '@/applications/security/password-hash';
 import { AddCommentUseCase } from '@/applications/use_case/add-comment-use-case';
+import { AddReplyUseCase } from '@/applications/use_case/add-reply-use-case';
 import { AddThreadUseCase } from '@/applications/use_case/add-thread-use-case';
 import { AddUserUseCase } from '@/applications/use_case/add-user-use-case';
 import { DeleteCommentUseCase } from '@/applications/use_case/delete-comment-use-case';
@@ -23,6 +24,7 @@ import { RefreshAuthenticationUseCase } from '@/applications/use_case/refresh-au
 import { pool } from '@/infrastructures/database/postgres/pool';
 import { AuthenticationRepositoryPostgres } from '@/infrastructures/repository/authentication-repository-postgres';
 import { CommentRepositoryPostgres } from '@/infrastructures/repository/comment-repository-postgres';
+import { ReplyRepositoryPostgres } from '@/infrastructures/repository/reply-repository-postgres';
 import { ThreadRepositoryPostgres } from '@/infrastructures/repository/thread-repository-postgres';
 import { UserRepositoryPostgres } from '@/infrastructures/repository/user-repository-postgres';
 import { BcryptPasswordHash } from '@/infrastructures/security/bcrypt-password-hash';
@@ -81,6 +83,20 @@ container.register([
         },
         {
           concrete: () => 'comment-' + nanoid(),
+        },
+      ],
+    },
+  },
+  {
+    key: ReplyRepository.name,
+    Class: ReplyRepositoryPostgres,
+    parameter: {
+      dependencies: [
+        {
+          concrete: pool,
+        },
+        {
+          concrete: () => 'reply-' + nanoid(),
         },
       ],
     },
@@ -242,6 +258,27 @@ container.register([
         {
           name: 'commentRepository',
           internal: CommentRepository.name,
+        },
+        {
+          name: 'threadRepository',
+          internal: ThreadRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: AddReplyUseCase.name,
+    Class: AddReplyUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'commentRepository',
+          internal: CommentRepository.name,
+        },
+        {
+          name: 'replyRepository',
+          internal: ReplyRepository.name,
         },
         {
           name: 'threadRepository',

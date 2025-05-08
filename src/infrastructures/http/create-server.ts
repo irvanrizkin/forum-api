@@ -8,6 +8,7 @@ import { DomainErrorTranslator } from '@/commons/exceptions/domain-error-transla
 
 import { authenticationsPlugin } from '@/interfaces/http/authentications';
 import { commentsPlugin } from '@/interfaces/http/comments';
+import { repliesPlugin } from '@/interfaces/http/replies';
 import { threadsPlugin } from '@/interfaces/http/threads';
 import { usersPlugin } from '@/interfaces/http/users';
 
@@ -69,6 +70,12 @@ const createServer = async (container: Container) => {
     },
     {
       plugin: commentsPlugin,
+      options: {
+        container,
+      },
+    },
+    {
+      plugin: repliesPlugin,
       options: {
         container,
       },

@@ -42,4 +42,7 @@ const directories: { [key: string]: Error } = {
   COMMENT_NOT_OWNER: new AuthorizationError(
     'anda tidak berhak mengakses resource ini',
   ),
+  'REPLY.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError(
+    'tidak dapat membuat balasan karena properti yang dibutuhkan tidak ada/tidak sesuai',
+  ),
 };
