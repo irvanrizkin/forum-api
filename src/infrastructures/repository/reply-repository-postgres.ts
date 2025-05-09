@@ -38,13 +38,26 @@ class ReplyRepositoryPostgres implements ReplyRepository {
 
   async getRepliesByCommentIds(commentIds: string[]): Promise<Reply[]> {
     const query = {
-      text: 'SELECT r.id, r.content, r.date, u.username, r.is_delete FROM replies r LEFT JOIN users u ON u.id = r.user_id WHERE comment_id = ANY($1)',
+      text: `
+          SELECT
+            r.id,
+            r.content,
+            r.date,
+            u.username,
+            r.is_delete,
+            r.comment_id
+          FROM replies r
+          LEFT JOIN users u ON u.id = r.user_id
+          WHERE comment_id = ANY($1)
+          ORDER BY r.date ASC
+        `,
       values: [commentIds],
     };
 
     const result = await this.pool.query(query);
-    return result.rows.map(({ is_delete, ...row }) => ({
+    return result.rows.map(({ is_delete, comment_id, ...row }) => ({
       ...row,
+      commentId: comment_id,
       content: is_delete ? '**balasan telah dihapus**' : row.content,
     }));
   }

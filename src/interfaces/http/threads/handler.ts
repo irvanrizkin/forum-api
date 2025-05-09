@@ -4,6 +4,7 @@ import { Container } from 'instances-container';
 import { ThreadPayloadSchema } from '@/commons/validations/thread-payload-validator';
 
 import { AddThreadUseCase } from '@/applications/use_case/add-thread-use-case';
+import { DetailThreadUseCase } from '@/applications/use_case/detail-thread-use-case';
 
 class ThreadsHandler {
   private container: Container;
@@ -33,6 +34,27 @@ class ThreadsHandler {
         },
       })
       .code(201);
+  };
+
+  getThreadHandler = async (request: Request, h: ResponseToolkit) => {
+    const threadId = request.params.threadId;
+
+    const detailThreadUseCase = this.container.getInstance(
+      DetailThreadUseCase.name,
+    ) as DetailThreadUseCase;
+
+    const thread = await detailThreadUseCase.execute({
+      threadId,
+    });
+
+    return h
+      .response({
+        status: 'success',
+        data: {
+          thread,
+        },
+      })
+      .code(200);
   };
 }
 

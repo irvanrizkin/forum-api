@@ -11,6 +11,11 @@ const routes = (handler: ThreadsHandler): ServerRoute[] => [
       auth: 'forumapi_jwt',
     },
   },
+  {
+    method: 'GET',
+    path: '/threads/{threadId}',
+    handler: handler.getThreadHandler,
+  },
 ];
 
 export { routes };

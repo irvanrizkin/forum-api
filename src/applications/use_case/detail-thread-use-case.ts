@@ -48,9 +48,13 @@ class DetailThreadUseCase {
       ...comment,
       replies: replies
         .filter((reply) => reply.commentId === comment.id)
-        .map((reply) => ({
-          ...reply,
-        })),
+        .map((reply) => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { commentId, ...row } = reply;
+          return {
+            ...row,
+          };
+        }),
     }));
 
     return {

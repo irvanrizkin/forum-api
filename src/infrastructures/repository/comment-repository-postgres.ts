@@ -37,7 +37,18 @@ class CommentRepositoryPostgres implements CommentRepository {
 
   async getCommentsByThreadIds(threadIds: string[]): Promise<Comment[]> {
     const query = {
-      text: 'SELECT c.id, c.content, c.date, u.username, c.is_delete FROM comments c LEFT JOIN users u ON u.id = c.user_id WHERE thread_id = ANY($1)',
+      text: `
+        SELECT
+          c.id,
+          c.content,
+          c.date,
+          u.username,
+          c.is_delete
+        FROM comments c
+        LEFT JOIN users u ON u.id = c.user_id
+        WHERE thread_id = ANY($1)
+        ORDER BY c.date ASC
+      `,
       values: [threadIds],
     };
 
