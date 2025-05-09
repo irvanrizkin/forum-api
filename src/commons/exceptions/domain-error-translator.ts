@@ -45,4 +45,8 @@ const directories: { [key: string]: Error } = {
   'REPLY.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError(
     'tidak dapat membuat balasan karena properti yang dibutuhkan tidak ada/tidak sesuai',
   ),
+  REPLY_NOT_FOUND: new NotFoundError('balasan tidak ditemukan'),
+  REPLY_NOT_OWNER: new AuthorizationError(
+    'anda tidak berhak mengakses resource ini',
+  ),
 };

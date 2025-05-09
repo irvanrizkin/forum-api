@@ -1,5 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
 
+import { AuthorizationError } from '@/commons/exceptions/authorization-error';
 import { DomainErrorTranslator } from '@/commons/exceptions/domain-error-translator';
 import { InvariantError } from '@/commons/exceptions/invariant-error';
 import { NotFoundError } from '@/commons/exceptions/not-found-error';
@@ -85,6 +86,31 @@ describe('DomainErrorTranslator', () => {
       new InvariantError(
         'tidak dapat membuat komentar karena properti yang dibutuhkan tidak ada/tidak sesuai',
       ),
+    );
+    expect(
+      DomainErrorTranslator.translate(new Error('COMMENT_NOT_FOUND')),
+    ).toStrictEqual(new NotFoundError('komentar tidak ditemukan'));
+    expect(
+      DomainErrorTranslator.translate(new Error('COMMENT_NOT_OWNER')),
+    ).toStrictEqual(
+      new AuthorizationError('anda tidak berhak mengakses resource ini'),
+    );
+    expect(
+      DomainErrorTranslator.translate(
+        new Error('REPLY.NOT_CONTAIN_NEEDED_PROPERTY'),
+      ),
+    ).toStrictEqual(
+      new InvariantError(
+        'tidak dapat membuat balasan karena properti yang dibutuhkan tidak ada/tidak sesuai',
+      ),
+    );
+    expect(
+      DomainErrorTranslator.translate(new Error('REPLY_NOT_FOUND')),
+    ).toStrictEqual(new NotFoundError('balasan tidak ditemukan'));
+    expect(
+      DomainErrorTranslator.translate(new Error('REPLY_NOT_OWNER')),
+    ).toStrictEqual(
+      new AuthorizationError('anda tidak berhak mengakses resource ini'),
     );
   });
 

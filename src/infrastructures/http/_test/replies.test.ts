@@ -350,4 +350,149 @@ describe('/replies endpoint', () => {
       expect(responseJson.status).toEqual('fail');
     });
   });
+
+  describe('when DELETE /threads/{threadId}/comments/{commentId}/replies/{replyId}', () => {
+    it('should response 200 and delete reply', async () => {
+      // Arrange
+      const requestPayload = {
+        content: 'Reply Content',
+      };
+
+      // Login John
+      const loginResponse = await server.inject({
+        method: 'POST',
+        url: '/authentications',
+        payload: {
+          username: 'john',
+          password: 'password',
+        },
+      });
+
+      // Create Reply
+      const replyResponse = await server.inject({
+        method: 'POST',
+        url: `/threads/${threadId}/comments/${commentId}/replies`,
+        payload: requestPayload,
+        headers: {
+          Authorization: `Bearer ${JSON.parse(loginResponse.payload).data.accessToken}`,
+        },
+      });
+      const replyResponseJson = JSON.parse(replyResponse.payload);
+      const replyId = replyResponseJson.data.addedReply.id;
+
+      // Action
+      const response = await server.inject({
+        method: 'DELETE',
+        url: `/threads/${threadId}/comments/${commentId}/replies/${replyId}`,
+        headers: {
+          Authorization: `Bearer ${JSON.parse(loginResponse.payload).data.accessToken}`,
+        },
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(200);
+      expect(responseJson.status).toEqual('success');
+    });
+
+    it('should response 403 when user is not the owner of the reply', async () => {
+      // Arrange
+      const requestPayload = {
+        content: 'Reply Content',
+      };
+
+      // Login John
+      const loginResponse = await server.inject({
+        method: 'POST',
+        url: '/authentications',
+        payload: {
+          username: 'john',
+          password: 'password',
+        },
+      });
+
+      // Create Reply
+      const replyResponse = await server.inject({
+        method: 'POST',
+        url: `/threads/${threadId}/comments/${commentId}/replies`,
+        payload: requestPayload,
+        headers: {
+          Authorization: `Bearer ${JSON.parse(loginResponse.payload).data.accessToken}`,
+        },
+      });
+      const replyResponseJson = JSON.parse(replyResponse.payload);
+      const replyId = replyResponseJson.data.addedReply.id;
+
+      // Login Jane
+      const janeLoginResponse = await server.inject({
+        method: 'POST',
+        url: '/authentications',
+        payload: {
+          username: 'jane',
+          password: 'password',
+        },
+      });
+      const janeAccessToken = JSON.parse(janeLoginResponse.payload).data
+        .accessToken;
+
+      // Action
+      const response = await server.inject({
+        method: 'DELETE',
+        url: `/threads/${threadId}/comments/${commentId}/replies/${replyId}`,
+        headers: {
+          Authorization: `Bearer ${janeAccessToken}`,
+        },
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(403);
+      expect(responseJson.status).toEqual('fail');
+      expect(responseJson.message).toEqual(
+        'anda tidak berhak mengakses resource ini',
+      );
+    });
+
+    it('should response 404 when reply not found', async () => {
+      // Arrange
+      const requestPayload = {
+        content: 'Reply Content',
+      };
+
+      // Login John
+      const loginResponse = await server.inject({
+        method: 'POST',
+        url: '/authentications',
+        payload: {
+          username: 'john',
+          password: 'password',
+        },
+      });
+
+      // Create Reply
+      await server.inject({
+        method: 'POST',
+        url: `/threads/${threadId}/comments/${commentId}/replies`,
+        payload: requestPayload,
+        headers: {
+          Authorization: `Bearer ${JSON.parse(loginResponse.payload).data.accessToken}`,
+        },
+      });
+
+      // Action
+      const response = await server.inject({
+        method: 'DELETE',
+        url: `/threads/${threadId}/comments/${commentId}/replies/invalid-reply-id`,
+        headers: {
+          Authorization: `Bearer ${JSON.parse(loginResponse.payload).data.accessToken}`,
+        },
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(404);
+      expect(responseJson.status).toEqual('fail');
+      expect(responseJson.message).toEqual('balasan tidak ditemukan');
+    });
+  });
 });

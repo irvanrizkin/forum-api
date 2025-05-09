@@ -16,6 +16,7 @@ import { AddReplyUseCase } from '@/applications/use_case/add-reply-use-case';
 import { AddThreadUseCase } from '@/applications/use_case/add-thread-use-case';
 import { AddUserUseCase } from '@/applications/use_case/add-user-use-case';
 import { DeleteCommentUseCase } from '@/applications/use_case/delete-comment-use-case';
+import { DeleteReplyUseCase } from '@/applications/use_case/delete-reply-use-case';
 import { DetailThreadUseCase } from '@/applications/use_case/detail-thread-use-case';
 import { LoginUserUseCase } from '@/applications/use_case/login-user-use-case';
 import { LogoutUserUseCase } from '@/applications/use_case/logout-user-use-case';
@@ -279,6 +280,27 @@ container.register([
         {
           name: 'replyRepository',
           internal: ReplyRepository.name,
+        },
+        {
+          name: 'threadRepository',
+          internal: ThreadRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: DeleteReplyUseCase.name,
+    Class: DeleteReplyUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'replyRepository',
+          internal: ReplyRepository.name,
+        },
+        {
+          name: 'commentRepository',
+          internal: CommentRepository.name,
         },
         {
           name: 'threadRepository',
