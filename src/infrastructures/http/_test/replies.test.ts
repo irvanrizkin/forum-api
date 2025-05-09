@@ -236,118 +236,118 @@ describe('/replies endpoint', () => {
       expect(response.statusCode).toEqual(404);
       expect(responseJson.status).toEqual('fail');
     });
-  });
 
-  it('should response 401 when request without authentication', async () => {
-    // Arrange
-    const requestPayload = {
-      content: 'Reply Content',
-    };
+    it('should response 401 when request without authentication', async () => {
+      // Arrange
+      const requestPayload = {
+        content: 'Reply Content',
+      };
 
-    // Action
-    const response = await server.inject({
-      method: 'POST',
-      url: `/threads/${threadId}/comments/${commentId}/replies`,
-      payload: requestPayload,
+      // Action
+      const response = await server.inject({
+        method: 'POST',
+        url: `/threads/${threadId}/comments/${commentId}/replies`,
+        payload: requestPayload,
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(401);
+      expect(responseJson.message).toEqual('Missing authentication');
     });
 
-    // Assert
-    const responseJson = JSON.parse(response.payload);
-    expect(response.statusCode).toEqual(401);
-    expect(responseJson.message).toEqual('Missing authentication');
-  });
+    it('should response 400 when request payload not contain needed property', async () => {
+      // Arrange
+      const requestPayload = {
+        title: 'Reply Title',
+      };
 
-  it('should response 400 when request payload not contain needed property', async () => {
-    // Arrange
-    const requestPayload = {
-      title: 'Reply Title',
-    };
+      // Login John
+      const loginResponse = await server.inject({
+        method: 'POST',
+        url: '/authentications',
+        payload: {
+          username: 'john',
+          password: 'password',
+        },
+      });
 
-    // Login John
-    const loginResponse = await server.inject({
-      method: 'POST',
-      url: '/authentications',
-      payload: {
-        username: 'john',
-        password: 'password',
-      },
+      // Action
+      const response = await server.inject({
+        method: 'POST',
+        url: `/threads/${threadId}/comments/${commentId}/replies`,
+        payload: requestPayload,
+        headers: {
+          Authorization: `Bearer ${JSON.parse(loginResponse.payload).data.accessToken}`,
+        },
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(400);
+      expect(responseJson.status).toEqual('fail');
     });
 
-    // Action
-    const response = await server.inject({
-      method: 'POST',
-      url: `/threads/${threadId}/comments/${commentId}/replies`,
-      payload: requestPayload,
-      headers: {
-        Authorization: `Bearer ${JSON.parse(loginResponse.payload).data.accessToken}`,
-      },
+    it('should response 400 when request payload not meet data type specification', async () => {
+      // Arrange
+      const requestPayload = {
+        content: true,
+      };
+
+      // Login John
+      const loginResponse = await server.inject({
+        method: 'POST',
+        url: '/authentications',
+        payload: {
+          username: 'john',
+          password: 'password',
+        },
+      });
+
+      // Action
+      const response = await server.inject({
+        method: 'POST',
+        url: `/threads/${threadId}/comments/${commentId}/replies`,
+        payload: requestPayload,
+        headers: {
+          Authorization: `Bearer ${JSON.parse(loginResponse.payload).data.accessToken}`,
+        },
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(400);
+      expect(responseJson.status).toEqual('fail');
     });
 
-    // Assert
-    const responseJson = JSON.parse(response.payload);
-    expect(response.statusCode).toEqual(400);
-    expect(responseJson.status).toEqual('fail');
-  });
+    it('should response 400 when request payload is empty object', async () => {
+      // Arrange
+      const requestPayload = {};
 
-  it('should response 400 when request payload not meet data type specification', async () => {
-    // Arrange
-    const requestPayload = {
-      content: true,
-    };
+      // Login John
+      const loginResponse = await server.inject({
+        method: 'POST',
+        url: '/authentications',
+        payload: {
+          username: 'john',
+          password: 'password',
+        },
+      });
 
-    // Login John
-    const loginResponse = await server.inject({
-      method: 'POST',
-      url: '/authentications',
-      payload: {
-        username: 'john',
-        password: 'password',
-      },
+      // Action
+      const response = await server.inject({
+        method: 'POST',
+        url: `/threads/${threadId}/comments/${commentId}/replies`,
+        payload: requestPayload,
+        headers: {
+          Authorization: `Bearer ${JSON.parse(loginResponse.payload).data.accessToken}`,
+        },
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(400);
+      expect(responseJson.status).toEqual('fail');
     });
-
-    // Action
-    const response = await server.inject({
-      method: 'POST',
-      url: `/threads/${threadId}/comments/${commentId}/replies`,
-      payload: requestPayload,
-      headers: {
-        Authorization: `Bearer ${JSON.parse(loginResponse.payload).data.accessToken}`,
-      },
-    });
-
-    // Assert
-    const responseJson = JSON.parse(response.payload);
-    expect(response.statusCode).toEqual(400);
-    expect(responseJson.status).toEqual('fail');
-  });
-
-  it('should response 400 when request payload is empty object', async () => {
-    // Arrange
-    const requestPayload = {};
-
-    // Login John
-    const loginResponse = await server.inject({
-      method: 'POST',
-      url: '/authentications',
-      payload: {
-        username: 'john',
-        password: 'password',
-      },
-    });
-
-    // Action
-    const response = await server.inject({
-      method: 'POST',
-      url: `/threads/${threadId}/comments/${commentId}/replies`,
-      payload: requestPayload,
-      headers: {
-        Authorization: `Bearer ${JSON.parse(loginResponse.payload).data.accessToken}`,
-      },
-    });
-
-    // Assert
-    const responseJson = JSON.parse(response.payload);
-    expect(response.statusCode).toEqual(400);
-    expect(responseJson.status).toEqual('fail');
   });
 });
