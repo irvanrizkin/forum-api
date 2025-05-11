@@ -1,4 +1,5 @@
 import { AddThread } from '@/domains/threads/entities/add-thread';
+import { AddedThread } from '@/domains/threads/entities/added-thread';
 import { ThreadRepository } from '@/domains/threads/thread-repository';
 
 interface AddThreadUseCasePayload {
@@ -26,10 +27,16 @@ class AddThreadUseCase {
       body,
     });
 
-    return this.threadRepository.addThread({
+    const addedThread = await this.threadRepository.addThread({
       title: addThread.title,
       body: addThread.body,
       userId,
+    });
+
+    return new AddedThread({
+      id: addedThread.id,
+      title: addThread.title,
+      owner: userId,
     });
   }
 }

@@ -1,16 +1,27 @@
-import { AddedThread } from '@/domains/threads/entities/added-thread';
-import { Thread } from '@/domains/threads/entities/thread';
-
 interface AddThreadParameter {
   title: string;
   body: string;
   userId: string;
 }
 
-abstract class ThreadRepository {
-  abstract addThread(thread: AddThreadParameter): Promise<AddedThread>;
-  abstract verifyAvailableThread(threadId: string): Promise<boolean>;
-  abstract getThreadById(threadId: string): Promise<Thread>;
+interface RawThread {
+  id: string;
+  title: string;
+  body: string;
+  date: Date;
+  username: string;
 }
 
-export { ThreadRepository, AddThreadParameter };
+interface RawAddedThread {
+  id: string;
+  title: string;
+  user_id: string;
+}
+
+abstract class ThreadRepository {
+  abstract addThread(thread: AddThreadParameter): Promise<RawAddedThread>;
+  abstract verifyAvailableThread(threadId: string): Promise<boolean>;
+  abstract getThreadById(threadId: string): Promise<RawThread>;
+}
+
+export { ThreadRepository, AddThreadParameter, RawThread, RawAddedThread };

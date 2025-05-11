@@ -7,8 +7,6 @@ import {
   it,
 } from '@jest/globals';
 
-import { AddedThread } from '@/domains/threads/entities/added-thread';
-
 import { pool } from '@/infrastructures/database/postgres/pool';
 import { ThreadRepositoryPostgres } from '@/infrastructures/repository/thread-repository-postgres';
 
@@ -56,13 +54,11 @@ describe('ThreadRepositoryPostgres', () => {
       const addedThread = await threadRepositoryPostgres.addThread(payload);
 
       // Assert
-      expect(addedThread).toStrictEqual(
-        new AddedThread({
-          id: 'thread-016',
-          title: payload.title,
-          owner: payload.userId,
-        }),
-      );
+      expect(addedThread).toStrictEqual({
+        id: 'thread-016',
+        title: payload.title,
+        user_id: payload.userId,
+      });
       const threads = await ThreadsTableTestHelper.findThreadById('thread-016');
       expect(threads).toHaveLength(1);
     });
@@ -137,7 +133,6 @@ describe('ThreadRepositoryPostgres', () => {
           username: 'john',
         }),
       );
-      expect(typeof thread.date).toEqual('string');
     });
   });
 });

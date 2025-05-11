@@ -1,9 +1,8 @@
 import { Pool } from 'pg';
 
-import { AddedThread } from '@/domains/threads/entities/added-thread';
-import { Thread } from '@/domains/threads/entities/thread';
 import {
   AddThreadParameter,
+  RawAddedThread,
   ThreadRepository,
 } from '@/domains/threads/thread-repository';
 
@@ -23,7 +22,7 @@ class ThreadRepositoryPostgres implements ThreadRepository {
     this.idGenerator = idGenerator;
   }
 
-  async addThread(thread: AddThreadParameter): Promise<AddedThread> {
+  async addThread(thread: AddThreadParameter): Promise<RawAddedThread> {
     const { title, body, userId } = thread;
     const id = `${this.idGenerator()}`;
 
@@ -34,11 +33,7 @@ class ThreadRepositoryPostgres implements ThreadRepository {
 
     const result = await this.pool.query(query);
 
-    return new AddedThread({
-      id: result.rows[0].id,
-      title: result.rows[0].title,
-      owner: result.rows[0].user_id,
-    });
+    return result.rows[0];
   }
 
   async verifyAvailableThread(threadId: string): Promise<boolean> {
@@ -56,7 +51,7 @@ class ThreadRepositoryPostgres implements ThreadRepository {
     return true;
   }
 
-  async getThreadById(threadId: string): Promise<Thread> {
+  async getThreadById(threadId: string): Promise<RawThread> {
     const query = {
       text: `SELECT threads.id, threads.title, threads.body, threads.date, users.username
              FROM threads
@@ -71,15 +66,7 @@ class ThreadRepositoryPostgres implements ThreadRepository {
       throw new Error('THREAD_NOT_FOUND');
     }
 
-    const thread = result.rows[0];
-
-    return new Thread({
-      id: thread.id,
-      title: thread.title,
-      body: thread.body,
-      date: thread.date.toISOString(),
-      username: thread.username,
-    });
+    return result.rows[0];
   }
 }
 
