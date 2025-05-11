@@ -47,12 +47,17 @@ class DetailThreadUseCase {
     const mappedComments = comments.map((comment) => ({
       ...comment,
       replies: replies
-        .filter((reply) => reply.commentId === comment.id)
+        .filter((reply) => reply.comment_id === comment.id)
         .map((reply) => {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { commentId, ...row } = reply;
+          const content = reply.is_delete
+            ? '**balasan telah dihapus**'
+            : reply.content;
+
           return {
-            ...row,
+            id: reply.id,
+            content,
+            date: reply.date,
+            username: reply.username,
           };
         }),
     }));

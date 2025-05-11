@@ -7,8 +7,6 @@ import {
   it,
 } from '@jest/globals';
 
-import { AddedReply } from '@/domains/replies/entities/added-reply';
-
 import { pool } from '@/infrastructures/database/postgres/pool';
 import { ReplyRepositoryPostgres } from '@/infrastructures/repository/reply-repository-postgres';
 
@@ -82,13 +80,11 @@ describe('ReplyRepositoryPostgres', () => {
       const addedReply = await replyRepositoryPostgres.addReply(payload);
 
       // Assert
-      expect(addedReply).toStrictEqual(
-        new AddedReply({
-          id: 'reply-123',
-          content: payload.content,
-          owner: payload.userId,
-        }),
-      );
+      expect(addedReply).toStrictEqual({
+        id: 'reply-123',
+        content: 'Reply Content',
+        user_id: 'user-123',
+      });
       const reply = await RepliesTableTestHelper.findReplyById('reply-123');
       expect(reply).toHaveLength(1);
     });
@@ -233,7 +229,7 @@ describe('ReplyRepositoryPostgres', () => {
       expect(result).toHaveLength(2);
     });
 
-    it('should return remove content if is_delete is true', async () => {
+    it('should return is_delete is true if reply deleted', async () => {
       // Arrange
       await RepliesTableTestHelper.addReply({
         id: 'reply-001',
@@ -251,7 +247,7 @@ describe('ReplyRepositoryPostgres', () => {
 
       // Assert
       expect(result).toHaveLength(1);
-      expect(result[0].content).toEqual('**balasan telah dihapus**');
+      expect(result[0].is_delete).toEqual(true);
     });
   });
 });

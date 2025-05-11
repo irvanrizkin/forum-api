@@ -44,14 +44,14 @@ describe('DetailThreadUseCase', () => {
         content: 'This is a reply content',
         date: '2023-10-01T00:00:00.000Z',
         username: 'john',
-        commentId: 'comment-123',
+        comment_id: 'comment-123',
       },
       {
         id: 'reply-456',
         content: 'This is another reply content',
         date: '2023-10-01T00:00:00.000Z',
         username: 'jane',
-        commentId: 'comment-456',
+        comment_id: 'comment-456',
       },
     ]);
 

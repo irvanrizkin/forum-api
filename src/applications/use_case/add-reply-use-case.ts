@@ -48,10 +48,16 @@ class AddReplyUseCase {
       throw new Error('COMMENT_NOT_FOUND');
     }
 
-    return this.replyRepository.addReply({
+    const addedReply = await this.replyRepository.addReply({
       content,
       commentId,
       userId,
+    });
+
+    return new AddedReply({
+      id: addedReply.id,
+      content: addedReply.content,
+      owner: addedReply.user_id,
     });
   }
 }

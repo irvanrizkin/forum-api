@@ -1,8 +1,10 @@
 import { Pool } from 'pg';
 
-import { AddedReply } from '@/domains/replies/entities/added-reply';
-import { Reply } from '@/domains/replies/entities/reply';
-import { ReplyRepository } from '@/domains/replies/reply-repository';
+import {
+  RawAddedReply,
+  RawReply,
+  ReplyRepository,
+} from '@/domains/replies/reply-repository';
 
 class ReplyRepositoryPostgres implements ReplyRepository {
   private pool: Pool;
@@ -20,7 +22,7 @@ class ReplyRepositoryPostgres implements ReplyRepository {
     content: string;
     commentId: string;
     userId: string;
-  }): Promise<AddedReply> {
+  }): Promise<RawAddedReply> {
     const id = this.idGenerator();
     const query = {
       text: 'INSERT INTO replies(id, content, comment_id, user_id) VALUES($1, $2, $3, $4) RETURNING id, content, user_id',
@@ -29,14 +31,10 @@ class ReplyRepositoryPostgres implements ReplyRepository {
 
     const result = await this.pool.query(query);
 
-    return new AddedReply({
-      id: result.rows[0].id,
-      content: result.rows[0].content,
-      owner: result.rows[0].user_id,
-    });
+    return result.rows[0];
   }
 
-  async getRepliesByCommentIds(commentIds: string[]): Promise<Reply[]> {
+  async getRepliesByCommentIds(commentIds: string[]): Promise<RawReply[]> {
     const query = {
       text: `
           SELECT
@@ -55,11 +53,8 @@ class ReplyRepositoryPostgres implements ReplyRepository {
     };
 
     const result = await this.pool.query(query);
-    return result.rows.map(({ is_delete, comment_id, ...row }) => ({
-      ...row,
-      commentId: comment_id,
-      content: is_delete ? '**balasan telah dihapus**' : row.content,
-    }));
+
+    return result.rows;
   }
 
   async deleteReply(replyId: string): Promise<void> {
