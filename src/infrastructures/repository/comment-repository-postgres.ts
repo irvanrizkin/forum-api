@@ -3,9 +3,9 @@ import { Pool } from 'pg';
 import {
   AddCommentParameter,
   CommentRepository,
+  RawAddedComment,
+  RawComment,
 } from '@/domains/comments/comment-repository';
-import { AddedComment } from '@/domains/comments/entities/added-comment';
-import { Comment } from '@/domains/comments/entities/comment';
 
 class CommentRepositoryPostgres implements CommentRepository {
   private pool: Pool;
@@ -19,7 +19,7 @@ class CommentRepositoryPostgres implements CommentRepository {
     content,
     threadId,
     userId,
-  }: AddCommentParameter): Promise<AddedComment> {
+  }: AddCommentParameter): Promise<RawAddedComment> {
     const id = this.idGenerator();
     const query = {
       text: 'INSERT INTO comments(id, content, thread_id, user_id) VALUES($1, $2, $3, $4) RETURNING id, content, user_id',
@@ -28,14 +28,10 @@ class CommentRepositoryPostgres implements CommentRepository {
 
     const result = await this.pool.query(query);
 
-    return new AddedComment({
-      id: result.rows[0].id,
-      content: result.rows[0].content,
-      owner: result.rows[0].user_id,
-    });
+    return result.rows[0];
   }
 
-  async getCommentsByThreadIds(threadIds: string[]): Promise<Comment[]> {
+  async getCommentsByThreadIds(threadIds: string[]): Promise<RawComment[]> {
     const query = {
       text: `
         SELECT
@@ -53,10 +49,8 @@ class CommentRepositoryPostgres implements CommentRepository {
     };
 
     const result = await this.pool.query(query);
-    return result.rows.map(({ is_delete, ...row }) => ({
-      ...row,
-      content: is_delete ? '**komentar telah dihapus**' : row.content,
-    }));
+
+    return result.rows;
   }
 
   async deleteComment(commentId: string): Promise<void> {

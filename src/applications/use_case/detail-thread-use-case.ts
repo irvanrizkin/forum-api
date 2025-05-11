@@ -44,23 +44,32 @@ class DetailThreadUseCase {
     const replies =
       await this.replyRepository.getRepliesByCommentIds(commentIds);
 
-    const mappedComments = comments.map((comment) => ({
-      ...comment,
-      replies: replies
-        .filter((reply) => reply.comment_id === comment.id)
-        .map((reply) => {
-          const content = reply.is_delete
-            ? '**balasan telah dihapus**'
-            : reply.content;
+    const mappedComments = comments.map((comment) => {
+      const content = comment.is_delete
+        ? '**komentar telah dihapus**'
+        : comment.content;
 
-          return {
-            id: reply.id,
-            content,
-            date: reply.date,
-            username: reply.username,
-          };
-        }),
-    }));
+      return {
+        id: comment.id,
+        content,
+        date: comment.date,
+        username: comment.username,
+        replies: replies
+          .filter((reply) => reply.comment_id === comment.id)
+          .map((reply) => {
+            const content = reply.is_delete
+              ? '**balasan telah dihapus**'
+              : reply.content;
+
+            return {
+              id: reply.id,
+              content,
+              date: reply.date,
+              username: reply.username,
+            };
+          }),
+      };
+    });
 
     return {
       ...thread,

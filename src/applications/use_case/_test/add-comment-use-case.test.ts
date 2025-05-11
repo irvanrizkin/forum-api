@@ -21,13 +21,11 @@ describe('AddCommentUseCase', () => {
     mockThreadRepository.verifyAvailableThread = jest
       .fn()
       .mockResolvedValue(true);
-    mockCommentRepository.addComment = jest.fn().mockResolvedValue(
-      new AddedComment({
-        id: 'comment-123',
-        content: useCasePayload.content,
-        owner: useCasePayload.userId,
-      }),
-    );
+    mockCommentRepository.addComment = jest.fn().mockResolvedValue({
+      id: 'comment-123',
+      content: useCasePayload.content,
+      user_id: useCasePayload.userId,
+    });
 
     const addCommentUseCase = new AddCommentUseCase({
       threadRepository: mockThreadRepository,

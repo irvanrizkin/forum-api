@@ -37,10 +37,16 @@ class AddCommentUseCase {
       throw new Error('THREAD_NOT_FOUND');
     }
 
-    return this.commentRepository.addComment({
+    const addedComment = await this.commentRepository.addComment({
       content,
       threadId,
       userId,
+    });
+
+    return new AddedComment({
+      id: addedComment.id,
+      content: addedComment.content,
+      owner: addedComment.user_id,
     });
   }
 }

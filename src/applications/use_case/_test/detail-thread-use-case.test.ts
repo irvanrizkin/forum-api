@@ -30,12 +30,14 @@ describe('DetailThreadUseCase', () => {
         content: 'This is a comment content',
         date: '2023-10-01T00:00:00.000Z',
         username: 'john',
+        is_delete: false,
       },
       {
         id: 'comment-456',
         content: 'This is another comment content',
         date: '2023-10-01T00:00:00.000Z',
         username: 'jane',
+        is_delete: false,
       },
     ]);
     mockReplyRepository.getRepliesByCommentIds = jest.fn().mockResolvedValue([
@@ -45,6 +47,7 @@ describe('DetailThreadUseCase', () => {
         date: '2023-10-01T00:00:00.000Z',
         username: 'john',
         comment_id: 'comment-123',
+        is_delete: false,
       },
       {
         id: 'reply-456',
@@ -52,6 +55,7 @@ describe('DetailThreadUseCase', () => {
         date: '2023-10-01T00:00:00.000Z',
         username: 'jane',
         comment_id: 'comment-456',
+        is_delete: false,
       },
     ]);
 

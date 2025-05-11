@@ -7,8 +7,6 @@ import {
   it,
 } from '@jest/globals';
 
-import { AddedComment } from '@/domains/comments/entities/added-comment';
-
 import { pool } from '@/infrastructures/database/postgres/pool';
 import { CommentRepositoryPostgres } from '@/infrastructures/repository/comment-repository-postgres';
 
@@ -70,13 +68,11 @@ describe('CommentRepositoryPostgres', () => {
       const addedComment = await commentRepositoryPostgres.addComment(payload);
 
       // Assert
-      expect(addedComment).toStrictEqual(
-        new AddedComment({
-          id: 'comment-123',
-          content: payload.content,
-          owner: payload.userId,
-        }),
-      );
+      expect(addedComment).toStrictEqual({
+        id: 'comment-123',
+        content: payload.content,
+        user_id: payload.userId,
+      });
       const comments =
         await CommentsTableTestHelper.findCommentById('comment-123');
       expect(comments).toHaveLength(1);
@@ -223,7 +219,7 @@ describe('CommentRepositoryPostgres', () => {
       expect(result).toHaveLength(2);
     });
 
-    it('should remove content if is_delete is true', async () => {
+    it('should return is_delete is true if comment deleted', async () => {
       // Arrange
       await CommentsTableTestHelper.addComment({
         id: 'comment-001',
@@ -241,7 +237,7 @@ describe('CommentRepositoryPostgres', () => {
 
       // Assert
       expect(result).toHaveLength(1);
-      expect(result[0].content).toEqual('**komentar telah dihapus**');
+      expect(result[0].is_delete).toEqual(true);
     });
   });
 });
