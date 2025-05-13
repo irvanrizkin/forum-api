@@ -6,6 +6,8 @@ const start = async () => {
   await server.start();
   // eslint-disable-next-line no-console
   console.log(`server is running on ${server.info.uri}`);
+
+  // Hello World
 };
 
 start();
