@@ -9,8 +9,8 @@
     "lint": "eslint .",
     "migrate": "node-pg-migrate",
     "migrate:test": "node-pg-migrate --envPath .test.env",
-    "test": "jest --setupFiles dotenv/config --runInBand",
-    "test:watch": "jest --watchAll --coverage --setupFiles dotenv/config --runInBand",
+    "test": "cross-env NODE_ENV=test jest --runInBand",
+    "test:watch": "cross-env NODE_ENV=test jest --watchAll --coverage --runInBand",
     "prepare": "husky install",
     "prettier": "prettier --write ."
   },
@@ -37,6 +37,7 @@
     "@types/jest": "^29.5.14",
     "@types/node": "^22.14.1",
     "@types/pg": "^8.11.12",
+    "cross-env": "^7.0.3",
     "esbuild": "^0.25.4",
     "eslint": "^9.24.0",
     "eslint-plugin-import": "^2.31.0",
