@@ -24,7 +24,7 @@ class LikesHandler {
       .response({
         status: 'success',
       })
-      .code(201);
+      .code(200);
   };
 }
 

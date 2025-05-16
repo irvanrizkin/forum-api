@@ -2,6 +2,7 @@ import { Pool } from 'pg';
 
 import {
   CommentLikeParameter,
+  LikeCount,
   LikeRepository,
 } from '@/domains/likes/like-repository';
 
@@ -50,6 +51,27 @@ class LikeRepositoryPostgres implements LikeRepository {
     const result = await this.pool.query(query);
 
     return (result.rowCount ?? 0) > 0;
+  }
+
+  async getLikeCountByCommentIds(commentIds: string[]): Promise<LikeCount[]> {
+    const query = {
+      text: `
+      WITH comment_ids AS (
+        SELECT UNNEST($1::text[]) AS comment_id
+      )
+      SELECT
+        c.comment_id,
+        COUNT(cl.*) AS count
+      FROM comment_ids c
+      LEFT JOIN comment_likes cl ON cl.comment_id = c.comment_id
+      GROUP BY c.comment_id
+      `,
+      values: [commentIds],
+    };
+
+    const result = await this.pool.query(query);
+
+    return result.rows;
   }
 }
 

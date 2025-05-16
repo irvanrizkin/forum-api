@@ -1,4 +1,5 @@
 import { MockCommentRepository } from '@/applications/use_case/_mocks/mock-comment-repository';
+import { MockLikeRepository } from '@/applications/use_case/_mocks/mock-like-repository';
 import { MockReplyRepository } from '@/applications/use_case/_mocks/mock-reply-repository';
 import { MockThreadRepository } from '@/applications/use_case/_mocks/mock-thread-repository';
 import { DetailThreadUseCase } from '@/applications/use_case/detail-thread-use-case';
@@ -13,6 +14,7 @@ describe('DetailThreadUseCase', () => {
     const mockThreadRepository = new MockThreadRepository();
     const mockCommentRepository = new MockCommentRepository();
     const mockReplyRepository = new MockReplyRepository();
+    const mockLikeRepository = new MockLikeRepository();
 
     mockThreadRepository.verifyAvailableThread = jest
       .fn()
@@ -58,11 +60,22 @@ describe('DetailThreadUseCase', () => {
         is_delete: false,
       },
     ]);
+    mockLikeRepository.getLikeCountByCommentIds = jest.fn().mockResolvedValue([
+      {
+        comment_id: 'comment-123',
+        count: 5,
+      },
+      {
+        comment_id: 'comment-456',
+        count: 3,
+      },
+    ]);
 
     const detailThreadUseCase = new DetailThreadUseCase({
       threadRepository: mockThreadRepository,
       commentRepository: mockCommentRepository,
       replyRepository: mockReplyRepository,
+      likeRepository: mockLikeRepository,
     });
 
     // Action
@@ -81,6 +94,7 @@ describe('DetailThreadUseCase', () => {
           content: 'This is a comment content',
           date: '2023-10-01T00:00:00.000Z',
           username: 'john',
+          likeCount: 5,
           replies: [
             {
               id: 'reply-123',
@@ -95,6 +109,7 @@ describe('DetailThreadUseCase', () => {
           content: 'This is another comment content',
           date: '2023-10-01T00:00:00.000Z',
           username: 'jane',
+          likeCount: 3,
           replies: [
             {
               id: 'reply-456',
@@ -130,6 +145,7 @@ describe('DetailThreadUseCase', () => {
     const mockThreadRepository = new MockThreadRepository();
     const mockCommentRepository = new MockCommentRepository();
     const mockReplyRepository = new MockReplyRepository();
+    const mockLikeRepository = new MockLikeRepository();
 
     mockThreadRepository.verifyAvailableThread = jest
       .fn()
@@ -139,6 +155,7 @@ describe('DetailThreadUseCase', () => {
       threadRepository: mockThreadRepository,
       commentRepository: mockCommentRepository,
       replyRepository: mockReplyRepository,
+      likeRepository: mockLikeRepository,
     });
 
     // Action & Assert

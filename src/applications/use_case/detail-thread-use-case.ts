@@ -1,4 +1,5 @@
 import { CommentRepository } from '@/domains/comments/comment-repository';
+import { LikeRepository } from '@/domains/likes/like-repository';
 import { ReplyRepository } from '@/domains/replies/reply-repository';
 import { ThreadRepository } from '@/domains/threads/thread-repository';
 
@@ -10,21 +11,25 @@ interface DetailThreadUseCaseDependencies {
   threadRepository: ThreadRepository;
   commentRepository: CommentRepository;
   replyRepository: ReplyRepository;
+  likeRepository: LikeRepository;
 }
 
 class DetailThreadUseCase {
   private threadRepository: ThreadRepository;
   private commentRepository: CommentRepository;
   private replyRepository: ReplyRepository;
+  private likeRepository: LikeRepository;
 
   constructor({
     threadRepository,
     commentRepository,
     replyRepository,
+    likeRepository,
   }: DetailThreadUseCaseDependencies) {
     this.threadRepository = threadRepository;
     this.commentRepository = commentRepository;
     this.replyRepository = replyRepository;
+    this.likeRepository = likeRepository;
   }
 
   async execute(useCasePayload: DetailThreadUseCasePayload) {
@@ -43,6 +48,8 @@ class DetailThreadUseCase {
     const commentIds = comments.map((comment) => comment.id);
     const replies =
       await this.replyRepository.getRepliesByCommentIds(commentIds);
+    const likeCounts =
+      await this.likeRepository.getLikeCountByCommentIds(commentIds);
 
     const mappedComments = comments.map((comment) => {
       const content = comment.is_delete
@@ -54,6 +61,11 @@ class DetailThreadUseCase {
         content,
         date: comment.date,
         username: comment.username,
+        likeCount: Number.parseInt(
+          likeCounts.find((likeCount) => likeCount.comment_id === comment.id)
+            ?.count ?? '0',
+          10,
+        ),
         replies: replies
           .filter((reply) => reply.comment_id === comment.id)
           .map((reply) => {

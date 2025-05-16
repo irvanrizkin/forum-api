@@ -32,6 +32,16 @@ describe('/threads endpoint', () => {
         fullname: 'John Doe',
       },
     });
+
+    await server.inject({
+      method: 'POST',
+      url: '/users',
+      payload: {
+        username: 'jane',
+        password: 'password',
+        fullname: 'Jane Doe',
+      },
+    });
   });
 
   beforeEach(async () => {
@@ -521,5 +531,100 @@ describe('/threads endpoint', () => {
     expect(
       threadResponseJson.data.thread.comments[0].replies[0].content,
     ).toEqual('**balasan telah dihapus**');
+  });
+
+  it('should show like count when there are likes', async () => {
+    // Arrange
+    const threadPayload = {
+      title: 'Thread Title',
+      body: 'Thread Body',
+    };
+
+    // john login
+    const loginResponse = await server.inject({
+      method: 'POST',
+      url: '/authentications',
+      payload: {
+        username: 'john',
+        password: 'password',
+      },
+    });
+
+    const {
+      data: { accessToken },
+    } = JSON.parse(loginResponse.payload);
+
+    // add thread
+    const response = await server.inject({
+      method: 'POST',
+      url: '/threads',
+      payload: threadPayload,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    const responseJson = JSON.parse(response.payload);
+    const { addedThread } = responseJson.data;
+
+    // add comment
+    const commentResponse = await server.inject({
+      method: 'POST',
+      url: `/threads/${addedThread.id}/comments`,
+      payload: {
+        content: 'Comment Content',
+      },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    const commentResponseJson = JSON.parse(commentResponse.payload);
+    const { addedComment } = commentResponseJson.data;
+
+    // john likes comment
+    await server.inject({
+      method: 'PUT',
+      url: `/threads/${addedThread.id}/comments/${addedComment.id}/likes`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    // jane login
+    const janeLoginResponse = await server.inject({
+      method: 'POST',
+      url: '/authentications',
+      payload: {
+        username: 'jane',
+        password: 'password',
+      },
+    });
+
+    const {
+      data: { accessToken: janeAccessToken },
+    } = JSON.parse(janeLoginResponse.payload);
+
+    // jane likes comment
+    await server.inject({
+      method: 'PUT',
+      url: `/threads/${addedThread.id}/comments/${addedComment.id}/likes`,
+      headers: {
+        Authorization: `Bearer ${janeAccessToken}`,
+      },
+    });
+
+    // Action
+    const threadResponse = await server.inject({
+      method: 'GET',
+      url: `/threads/${addedThread.id}`,
+    });
+
+    // Assert
+    const threadResponseJson = JSON.parse(threadResponse.payload);
+    expect(threadResponse.statusCode).toEqual(200);
+    expect(threadResponseJson.status).toEqual('success');
+    expect(threadResponseJson.data.thread.comments).toHaveLength(1);
+    expect(threadResponseJson.data.thread.comments[0].likeCount).toEqual(2);
   });
 });
