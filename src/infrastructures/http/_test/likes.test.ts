@@ -106,7 +106,7 @@ describe('/likes endpoints', () => {
   });
 
   describe('POST /threads/{threadId}/comments/{commentId}/likes', () => {
-    it('should response 201 and like the comment', async () => {
+    it('should response 200 and like the comment', async () => {
       // Arrange
       const loginResponse = await server.inject({
         method: 'POST',
@@ -128,7 +128,7 @@ describe('/likes endpoints', () => {
 
       // Assert
       const responseJson = JSON.parse(response.payload);
-      expect(response.statusCode).toEqual(201);
+      expect(response.statusCode).toEqual(200);
       expect(responseJson.status).toEqual('success');
       const likes =
         await CommentLikesTableTestHelper.findCommentLikeCountByCommentId(
@@ -138,7 +138,7 @@ describe('/likes endpoints', () => {
     });
   });
 
-  it('should response 201 when called twice to unlike', async () => {
+  it('should response 200 when called twice to unlike', async () => {
     // Arrange
     const loginResponse = await server.inject({
       method: 'POST',
@@ -168,7 +168,7 @@ describe('/likes endpoints', () => {
 
     // Assert
     const responseJson = JSON.parse(response.payload);
-    expect(response.statusCode).toEqual(201);
+    expect(response.statusCode).toEqual(200);
     expect(responseJson.status).toEqual('success');
     const likes =
       await CommentLikesTableTestHelper.findCommentLikeCountByCommentId(
