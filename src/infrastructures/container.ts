@@ -5,6 +5,7 @@ import { nanoid } from 'nanoid';
 
 import { AuthenticationRepository } from '@/domains/authentications/authentication-repository';
 import { CommentRepository } from '@/domains/comments/comment-repository';
+import { LikeRepository } from '@/domains/likes/like-repository';
 import { ReplyRepository } from '@/domains/replies/reply-repository';
 import { ThreadRepository } from '@/domains/threads/thread-repository';
 import { UserRepository } from '@/domains/users/user-repository';
@@ -18,6 +19,7 @@ import { AddUserUseCase } from '@/applications/use_case/add-user-use-case';
 import { DeleteCommentUseCase } from '@/applications/use_case/delete-comment-use-case';
 import { DeleteReplyUseCase } from '@/applications/use_case/delete-reply-use-case';
 import { DetailThreadUseCase } from '@/applications/use_case/detail-thread-use-case';
+import { LikeCommentUseCase } from '@/applications/use_case/like-comment-use-case';
 import { LoginUserUseCase } from '@/applications/use_case/login-user-use-case';
 import { LogoutUserUseCase } from '@/applications/use_case/logout-user-use-case';
 import { RefreshAuthenticationUseCase } from '@/applications/use_case/refresh-authentication-use-case';
@@ -25,6 +27,7 @@ import { RefreshAuthenticationUseCase } from '@/applications/use_case/refresh-au
 import { pool } from '@/infrastructures/database/postgres/pool';
 import { AuthenticationRepositoryPostgres } from '@/infrastructures/repository/authentication-repository-postgres';
 import { CommentRepositoryPostgres } from '@/infrastructures/repository/comment-repository-postgres';
+import { LikeRepositoryPostgres } from '@/infrastructures/repository/like-repository-postgres';
 import { ReplyRepositoryPostgres } from '@/infrastructures/repository/reply-repository-postgres';
 import { ThreadRepositoryPostgres } from '@/infrastructures/repository/thread-repository-postgres';
 import { UserRepositoryPostgres } from '@/infrastructures/repository/user-repository-postgres';
@@ -98,6 +101,20 @@ container.register([
         },
         {
           concrete: () => 'reply-' + nanoid(),
+        },
+      ],
+    },
+  },
+  {
+    key: LikeRepository.name,
+    Class: LikeRepositoryPostgres,
+    parameter: {
+      dependencies: [
+        {
+          concrete: pool,
+        },
+        {
+          concrete: () => 'like-' + nanoid(),
         },
       ],
     },
@@ -297,6 +314,27 @@ container.register([
         {
           name: 'replyRepository',
           internal: ReplyRepository.name,
+        },
+        {
+          name: 'commentRepository',
+          internal: CommentRepository.name,
+        },
+        {
+          name: 'threadRepository',
+          internal: ThreadRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: LikeCommentUseCase.name,
+    Class: LikeCommentUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'likeRepository',
+          internal: LikeRepository.name,
         },
         {
           name: 'commentRepository',
