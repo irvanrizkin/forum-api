@@ -42,4 +42,21 @@ describe('HTTP server', () => {
     expect(responseJson.status).toEqual('error');
     expect(responseJson.message).toEqual('internal server error');
   });
+
+  it('should response 200 and return the correct payload', async () => {
+    // Arrange
+    const emptyContainer = new Container();
+    const server = await createServer(emptyContainer);
+
+    // Action
+    const response = await server.inject({
+      method: 'GET',
+      url: '/',
+    });
+
+    // Assert
+    const responseJson = JSON.parse(response.payload);
+    expect(response.statusCode).toEqual(200);
+    expect(responseJson.message).toEqual('Welcome to Forum API');
+  });
 });
