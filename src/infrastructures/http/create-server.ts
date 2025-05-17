@@ -89,6 +89,14 @@ const createServer = async (container: Container) => {
     },
   ]);
 
+  server.route({
+    method: 'GET',
+    path: '/',
+    handler: () => ({
+      message: 'Welcome to Forum API',
+    }),
+  });
+
   server.ext('onPreResponse', (request: Request, h: ResponseToolkit) => {
     const { response } = request;
 
